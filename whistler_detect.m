@@ -21,6 +21,7 @@
 
 	loc = freqBase < 5600 & freqBase > 3500;
 	
+	freqWindow = freqBase(loc);
 	powerWindow = power(loc,:);
 	
 	noise = prctile(powerWindow(:),95);
@@ -37,8 +38,6 @@
 	startIndex = find(startPoints);
 	
 %% Check shape starting at each start point
-
-	% Good indices to test: 38, 64, 78, 84
 
 	whistlers = {};
 	index = 1;
@@ -79,3 +78,9 @@
 		index = index + 1;
 		
 	end
+	
+%% Get dispersion and start time
+
+	spectra = whistlers{1};
+
+	[dispersion, arrivalTime] = dispersion_check(timeBase, freqWindow, spectra);
