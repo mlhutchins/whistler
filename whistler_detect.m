@@ -38,7 +38,26 @@
 	
 %% Check shape starting at each start point
 
+	% Good indices to test: 38, 64, 78, 84
+
 	for i = 1 : length(startIndex)
 		shape = shape_extract(powerBinary,[size(powerBinary,1),startIndex(i)]);
 
+		shapeSize(i) = sum(shape(:));
+		
+		% Check for whistler shape
+		
+		% Cut small shapes
+		if sum(shape(:)) < 30
+			continue
+		end
+		
+		topRow = timeBase(sum(shape(end - 4 : end,:),1) > 0);
+		bottomRow = timeBase(sum(shape(1:4,:),1) > 0);
+		
+		% Cut shapes where the start is not far from the end
+		if mean(bottomRow) < mean(topRow) + 0.1;
+			continue
+		end
+		
 	end
