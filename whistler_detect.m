@@ -14,5 +14,5 @@
 	
 %% Get spectral power density
 
-	[frequency,spectra] = spectrogram(eField,time,Fs);
+	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
 	
