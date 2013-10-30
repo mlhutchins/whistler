@@ -40,10 +40,20 @@
 
 	% Good indices to test: 38, 64, 78, 84
 
+	whistlers = {};
+	index = 1;
+	
 	for i = 1 : length(startIndex)
-		shape = shape_extract(powerBinary,[size(powerBinary,1),startIndex(i)]);
-
-		shapeSize(i) = sum(shape(:));
+		
+		startPoint = [1,startIndex(i)];
+		
+		if i > 1
+			if shape(startPoint(1),startPoint(2))
+				continue
+			end
+		end
+		
+		shape = shape_extract(powerBinary,startPoint);
 		
 		% Check for whistler shape
 		
@@ -54,10 +64,18 @@
 		
 		topRow = timeBase(sum(shape(end - 4 : end,:),1) > 0);
 		bottomRow = timeBase(sum(shape(1:4,:),1) > 0);
+
+		if isempty(topRow) || isempty(bottomRow)
+			continue
+		end
 		
 		% Cut shapes where the start is not far from the end
 		if mean(bottomRow) < mean(topRow) + 0.1;
 			continue
 		end
+		
+		whistlers{index,1} = shape;
+		whistlers{index,2} = timeBase(startIndex(i));
+		index = index + 1;
 		
 	end
