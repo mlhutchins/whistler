@@ -10,57 +10,57 @@ function [D, time] = dispersion_check(spec, fRange, tw)
     %% Crude dispersion calculation
 
     % Generate a coarse index to shift each frequency to de-chirp it
-    Dtest = numpy.linspace(50,800,21)
-    dStep = Dtest[1] - Dtest[0]
+    Dtest = linspace(50,800,21);
+    dStep = Dtest(2) - Dtest(1);
 
     % Initialize output array
-    power = numpy.zeros((len(Dtest),spec.shape[0]))
+    power = zeros(length(Dtest),size(spec,1));
 
-    for i in range(len(Dtest)):
+    for i = 1 : length(Dtest)
 
-        D = Dtest[i]
+        D = Dtest(i);
 
-        shift = de_chirp(spec, D, tw, fRange)
+        shift = de_chirp(spec, D, tw, fRange);
 
-        power[i,:] = numpy.sum(shift,1)**4
+        power(i,:) = sum(shift,1).^4;
 	end
 
-    power = numpy.sum(power,axis=1)
-    dispersion = Dtest[power == numpy.max(power)]
+    power = sum(power,1);
+    dispersion = Dtest(power == max(power));
 
-    if len(dispersion) > 1:
-        dispersion = dispersion[0]
+    if length(dispersion) > 1:
+        dispersion = dispersion(1);
 	end
 	
     %% Fine dispersion calculation
 
-    Dtest = numpy.linspace(dispersion-dStep,dispersion+dStep,31)
+    Dtest = linspace(dispersion-dStep,dispersion+dStep,31);
 
     % Initialize output array
-    power = numpy.zeros((len(Dtest),spec.shape[0]))
+    power = zeros(length(Dtest),size(spec,1));
 
-    for i in range(len(Dtest)):
+    for i = 1 : length(Dtest)
 
-        D = Dtest[i]
+        D = Dtest(i)
 
-        shift = de_chirp(spec, D, tw, fRange)
+        shift = de_chirp(spec, D, tw, fRange);
 
-        power[i,:] = numpy.sum(shift,1)**4
+        power(i,:) = sum(shift,1).^4;
 	end
 
-    power = numpy.sum(power,axis=1)
+    power = sum(power,1);
 
-    dispersion = Dtest[power == numpy.max(power)]
-    if len(dispersion) > 1:
-        dispersion = dispersion[0]
+    dispersion = Dtest(power == max(power));
+    if length(dispersion) > 1
+        dispersion = dispersion(1);
 	end
 
     % Get de-chirped spectra
 
-    chirp = 0. * spec.copy()
-    D = dispersion
+    chirp = 0. * spec;
+    D = dispersion;
 
-    chirp = de_chirp(spec, D, tw, fRange)
+    chirp = de_chirp(spec, D, tw, fRange);
 
 end
 
@@ -69,22 +69,22 @@ function shift = de_chirp(spec, D, tw, fRange)
 
     % Get the left shift-vector in seconds for a D = 1 constant
 
-    fRange[0] = fRange[1]
-    fShift = 1./numpy.sqrt(fRange)
+    fRange(1) = fRange(2);
+    fShift = 1./sqrt(fRange);
 
     % Convert to seconds in units of time step
-    fSamp = 1./(tw[1]-tw[0])
-    fShift = fSamp * fShift
+    fSamp = 1./(tw(2) - tw(1));
+    fShift = fSamp .* fShift;
 
-    intShift = numpy.ceil(0.5 * D * fShift);
+    intShift = ceil(0.5 .* D .* fShift);
 
-    shift = 0. * spec.copy()
+    shift = 0 .* spec;
 
     % Shift each row of spec
-    for j in range(len(fRange)):
+    for j = 1 : length(fRange);
 
-        shiftLevel = -intShift[j]
-        shift[j,:] = numpy.roll(spec[j,:],int(shiftLevel));
+        shiftLevel = -intShift(j);
+        shift(j,:) = circshift(spec(j,:),round(shiftLevel));
 
 	end
 end
