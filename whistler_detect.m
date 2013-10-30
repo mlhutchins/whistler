@@ -83,4 +83,4 @@
 
 	spectra = whistlers{1};
 
-	[dispersion, arrivalTime] = dispersion_check(timeBase, freqWindow, spectra);
+	[dispersion, arrivalTime] = dispersion_check(spectra, freqWindow, timeBase);
