@@ -38,7 +38,7 @@
 	
 %% Check shape starting at each start point
 
-	for i = 1 : length(startPoints)
-		shape = shape_extract(powerBinary,[1,startPoints(i)]);
-		
+	for i = 1 : length(startIndex)
+		shape = shape_extract(powerBinary,[size(powerBinary,1),startIndex(i)]);
+
 	end
