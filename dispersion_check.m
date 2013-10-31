@@ -1,4 +1,4 @@
-function [D, time] = dispersion_check(spec, fRange, tw)
+function [D, time, chirp] = dispersion_check(spec, fRange, tw)
 %DISPERSION_CHECK calculates the best fit dispersion and arrival time of
 %the isolated sferic in spectra
 %
@@ -41,14 +41,14 @@ function [D, time] = dispersion_check(spec, fRange, tw)
 
     for i = 1 : length(Dtest)
 
-        D = Dtest(i)
+        D = Dtest(i);
 
         shift = de_chirp(spec, D, tw, fRange);
 
-        power(i,:) = sum(shift,1).^4;
+        power(i,:) = sum(shift,2).^4;
 	end
 
-    power = sum(power,1);
+    power = sum(power,2);
 
     dispersion = Dtest(power == max(power));
     if length(dispersion) > 1
@@ -62,6 +62,10 @@ function [D, time] = dispersion_check(spec, fRange, tw)
 
     chirp = de_chirp(spec, D, tw, fRange);
 
+	% Get start time
+	
+	time = 0;
+	
 end
 
 %% Dechirp the given spectra by the coefficient D
