@@ -21,14 +21,14 @@ function [D, time] = dispersion_check(spec, fRange, tw)
         D = Dtest(i);
 
         shift = de_chirp(spec, D, tw, fRange);
-
-        power(i,:) = sum(shift,1).^4;
+		
+        power(i,:) = sum(shift,2).^4;
 	end
 
-    power = sum(power,1);
+    power = sum(power,2);
     dispersion = Dtest(power == max(power));
 
-    if length(dispersion) > 1:
+    if length(dispersion) > 1
         dispersion = dispersion(1);
 	end
 	
@@ -84,7 +84,7 @@ function shift = de_chirp(spec, D, tw, fRange)
     for j = 1 : length(fRange);
 
         shiftLevel = -intShift(j);
-        shift(j,:) = circshift(spec(j,:),round(shiftLevel));
+        shift(j,:) = circshift(spec(j,:),[0,shiftLevel]);
 
 	end
 end
