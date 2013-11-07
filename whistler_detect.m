@@ -82,9 +82,13 @@
 	
 %% Get dispersion and start time
 
+	% Pick whistler number
+	whistlerNumber = 1;
+
 	% Set window for dispersion window size
-	freqCut = [30,200];
-	timeCut = [whistlers{1,2} - 20 , whistlers{1,2} + 120];
+	freqCut = [50,200];
+	timeCut = [whistlers{whistlerNumber,2} - 20,...
+			   whistlers{whistlerNumber,2} + 120];
 
 	% Cut and pad with minimum power
 	padSize = 80;
