@@ -74,13 +74,38 @@
 		end
 		
 		whistlers{index,1} = shape;
-		whistlers{index,2} = timeBase(startIndex(i));
+		whistlers{index,2} = startIndex(i);
 		index = index + 1;
 		
 	end
 	
 %% Get dispersion and start time
 
-	spectra = whistlers{1};
+	% Set window for dispersion window size
+	freqCut = [30,200];
+	timeCut = [whistlers{1,2} - 20 , whistlers{1,2} + 120];
 
-	[dispersion, arrivalTime] = dispersion_check(spectra, freqWindow, timeBase);
+	% Cut and pad with minimum power
+	padSize = 80;
+	
+	spectra = power;
+	spectra = spectra(freqCut(1) : freqCut(2), timeCut(1) : timeCut(2));
+	
+	spectraZero = zeros(size(spectra,1),padSize) + min(spectra(:));
+	spectra = [spectraZero, spectra, spectraZero];
+	
+	% Remove sferics
+	
+	sferic = sum(spectra([end-10:end],:),1) >= -200;
+	
+	spectra(:,sferic) = min(spectra(:));	
+	
+	% Calculate dispersion
+	
+	freqChirp = freqBase(freqCut(1) : freqCut(2));
+	timeChirp = timeBase(timeCut(1) - padSize : timeCut(2) + padSize);
+	
+	[dispersion, arrivalTime,dechirp] = ...
+		dispersion_check(spectra,...
+						 freqChirp,...
+						 timeChirp);
