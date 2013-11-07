@@ -121,3 +121,4 @@
 	title(dispersion)
 	xlabel('Time')
 	ylabel('Frequency')
+	set(gca,'Ydir','Normal')
