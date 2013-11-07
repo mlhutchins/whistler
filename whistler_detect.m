@@ -94,7 +94,7 @@
 			   whistlers{whistlerNumber,2} + 120];
 
 	% Cut and pad with minimum power
-	padSize = 80;
+	padSize = 0;
 	
 	spectra = power;
 	spectra = spectra(freqCut(1) : freqCut(2), timeCut(1) : timeCut(2));
