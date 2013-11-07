@@ -11,8 +11,11 @@
 %% Import data
 
 	% Whistler is a nose-whistler!
+	% Dispersion is about 170
 	[time, eField, Fs] = wideband_import('WB20130223140900.dat');
-	
+
+	% Dispersion is about 170
+	[time, eField, Fs] = wideband_import('WB20130223141800.dat');
 %% Get spectral power density
 
 	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
