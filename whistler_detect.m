@@ -10,6 +10,7 @@
 	
 %% Import data
 
+	% Whistler is a nose-whistler!
 	[time, eField, Fs] = wideband_import('WB20130223140900.dat');
 	
 %% Get spectral power density
@@ -106,6 +107,13 @@
 	timeChirp = timeBase(timeCut(1) - padSize : timeCut(2) + padSize);
 	
 	[dispersion, arrivalTime,dechirp] = ...
-		dispersion_check(spectra,...
-						 freqChirp,...
-						 timeChirp);
+		dispersion_check(spectra, freqChirp, timeChirp);
+
+%% Plot dechirped spectra
+
+	%dechirp = de_chirp(spectra,170,timeChirp,freqChirp);
+
+	imagesc(timeChirp,freqChirp,circshift(dechirp,[0,100]))
+	title(dispersion)
+	xlabel('Time')
+	ylabel('Frequency')
