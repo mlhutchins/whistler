@@ -10,11 +10,11 @@ function [D, time, chirp] = dispersion_check(spec, fRange, tw)
     %% Crude dispersion calculation
 
     % Generate a coarse index to shift each frequency to de-chirp it
-    Dtest = linspace(50,800,21);
+    Dtest = linspace(100,800,21);
     dStep = Dtest(2) - Dtest(1);
 
     % Initialize output array
-    power = zeros(length(Dtest),size(spec,1));
+    power = zeros(length(Dtest),size(spec,2));
 
     for i = 1 : length(Dtest)
 
@@ -22,7 +22,7 @@ function [D, time, chirp] = dispersion_check(spec, fRange, tw)
 
         shift = de_chirp(spec, D, tw, fRange);
 		
-        power(i,:) = sum(shift,2).^4;
+        power(i,:) = sum(shift,1).^2;
 	end
 
     power = sum(power,2);
@@ -37,7 +37,7 @@ function [D, time, chirp] = dispersion_check(spec, fRange, tw)
     Dtest = linspace(dispersion-dStep,dispersion+dStep,31);
 
     % Initialize output array
-    power = zeros(length(Dtest),size(spec,1));
+    power = zeros(length(Dtest),size(spec,2));
 
     for i = 1 : length(Dtest)
 
@@ -45,7 +45,7 @@ function [D, time, chirp] = dispersion_check(spec, fRange, tw)
 
         shift = de_chirp(spec, D, tw, fRange);
 
-        power(i,:) = sum(shift,2).^4;
+        power(i,:) = sum(shift,1).^4;
 	end
 
     power = sum(power,2);
