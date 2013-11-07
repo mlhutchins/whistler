@@ -33,7 +33,7 @@
 	
 %% Find starting points
 
-	startPoints = sum(powerBinary(1 : 2,:)) == 2;
+	startPoints = sum(powerBinary(end - 1 : end,:)) == 2;
 	startPoints = startPoints & ~circshift(startPoints,[0,1]);
 	
 	startIndex = find(startPoints);
@@ -45,7 +45,7 @@
 	
 	for i = 1 : length(startIndex)
 		
-		startPoint = [1,startIndex(i)];
+		startPoint = [size(powerBinary,1),startIndex(i)];
 		
 		if i > 1
 			if shape(startPoint(1),startPoint(2))
