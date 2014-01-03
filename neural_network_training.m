@@ -4,17 +4,28 @@ function neural_network_training
 %
 %	Written by: Michael Hutchins
 
-	%% Get training dataset
+%% Get training dataset file information
 	
+	trainingDir = 'training/';
+	widebandDir = 'data/';
 	
-	%% Generate negative examples
+	fid = fopen(sprintf('%strigger.txt',trainingDir),'r');
+	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
 	
+	triggersPos = trainingList(:,7);
+	triggersNeg = triggersPos - 5;
 	
-	%% Format training set
+	triggers = [triggersPos; triggersNeg];
+	labels = [true(length(triggerPos),1); false(length(triggerNeg),1)];
 	
+	% Double for negative examples
+	trainingList = [trainingList; trainingList];
 	
-	%% Set random seed
+	files = cell(size(trainingList,1),1);
 	
+	for i = 1 : size(trainingList,1);
+		files{i} = sprintf('WB%04g%02g%02g%02g%02g%02g.dat',trainingList(i,1:6));
+	end
 	
 	%% Split into traing / CV / test
 	
