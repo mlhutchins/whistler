@@ -7,6 +7,9 @@ function neural_network_training
 	%% Get training dataset
 	
 	
+	%% Generate negative examples
+	
+	
 	%% Format training set
 	
 	
