@@ -180,3 +180,41 @@ function [ spectra ] = whistler_spectra( widebandFile, startTime )
 
 end
 
+function W = rand_initialize_weights(L_in, L_out)
+%RANDINITIALIZEWEIGHTS Randomly initialize the weights of a layer with L_in
+%incoming connections and L_out outgoing connections
+%   W = RANDINITIALIZEWEIGHTS(L_in, L_out) randomly initializes the weights 
+%   of a layer with L_in incoming connections and L_out outgoing 
+%   connections. 
+%
+%   Note that W should be set to a matrix of size(L_out, 1 + L_in) as
+%   the column row of W handles the "bias" terms
+%
+%	Code adapted from: Andrew Ng's Machine Learning Course
+
+% Expected output size: W = zeros(L_out, 1 + L_in);
+
+% Note: The first row of W corresponds to the parameters for the bias units
+
+% Randomly initialize the weights to small values
+epsilon_init = 0.12;
+W = rand(L_out, 1 + L_in) * 2 * epsilon_init - epsilon_init;
+
+end
+
+function p = predict(Theta1, Theta2, X)
+%PREDICT Predict the label of an input given a trained neural network
+%   p = PREDICT(Theta1, Theta2, X) outputs the predicted label of X given the
+%   trained weights of a neural network (Theta1, Theta2)
+
+%% Useful values
+	m = size(X, 1);
+
+%% Get predicted output label index
+
+	h1 = sigmoid([ones(m, 1) X] * Theta1');
+	h2 = sigmoid([ones(m, 1) h1] * Theta2');
+	[~, p] = max(h2, [], 2);
+
+end
+
