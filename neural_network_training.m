@@ -56,6 +56,10 @@ function neural_network_training
 	end
 	
 	
+%% Set random seed
+	
+	rng(1);
+	
 	%% Initialize variables and parameters
 
 
