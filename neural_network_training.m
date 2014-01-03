@@ -78,13 +78,47 @@ function neural_network_training
 	
 	%% Initialize variables and parameters
 
+	lambda = 0.5; % Regularization parameter
+	inputLayerSize = size(X,2);
+	hiddenLayerSize = 400;
+	nLabels = length(unique(labels));
+	
+	% Random initialize neural network weights
+	initialTheta1 = rand_initialize_weights(inputLayerSize, hiddenLayerSize);
+	initialTheta2 = rand_initialize_weights(hiddenLayerSize, nLabels);
 
+	% Create parameter vector
+	initialParams = [initialTheta1(:) ; initialTheta2(:)];
+
+	% Optimization code options
+	options = optimset('MaxIter', 50);
+
+	% Create "short hand" for the cost function to be minimized
+	costFunction = @(p) nn_cost(p, ...
+						   inputLayerSize, ...
+						   hiddenLayerSize, ...
+						   nLabels, X, y, lambda);
+	
 	%% Train neural network
 	
-	
+	% Now, costFunction is a function that takes in only one argument (the
+	% neural network parameters)
+	[nnParams, cost] = fmincg(costFunction, initialParams, options);
+
+	% Obtain Theta1 and Theta2 back from nnParams
+	Theta1 = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
+				 hiddenLayerSize, (inputLayerSize + 1));
+
+	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
+                 nLabels, (hiddenLayerSize + 1));
+
+	% Visualize weights
+	display_data(Theta1(:, 2:end));
+
 	%% Cross validate parameters
 	
-	
+	pred = predict(Theta1, Theta2, X);
+
 	%% Pick best parameters
 	
 	
