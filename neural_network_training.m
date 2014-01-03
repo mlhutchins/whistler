@@ -60,6 +60,22 @@ function neural_network_training
 	
 	rng(1);
 	
+%% Split into traing / CV / test
+	
+	train = randsample(nFiles,round(0.8 * nFiles)); %Train with 80% of the data
+	X = samples(train,:);
+	y = labels(train,:);
+	
+	remaining = [1 : nFiles];
+	remaining(train) = [];
+	
+	sampling = randsample(length(remaining), floor(length(remaining) / 2));
+	cv = remaining(sampling); % Index of values for cross validation (10%)
+	
+	remaining(sampling) = [];
+	test = remaining; %Test with last 10% of the data
+
+	
 	%% Initialize variables and parameters
 
 
