@@ -27,7 +27,33 @@ function neural_network_training
 		files{i} = sprintf('WB%04g%02g%02g%02g%02g%02g.dat',trainingList(i,1:6));
 	end
 	
-	%% Split into traing / CV / test
+%% Import and unwrap spectra
+	
+	% Import the first to get file sizes
+	
+	fileName = sprintf('%s%s',widebandDir,files{1});
+
+	spectra = whistler_spectra(fileName);
+	
+	sizeFreq = size(spectra,1);
+	sizeTime = size(spectra,2);
+	n = length(spectra(:));
+	nFiles = length(files);
+	
+	samples = zeroes(nFiles, n);
+	
+	for i = 1 : nFiles
+		
+		fileName = sprintf('%s%s',widebandDir,files{i});
+	
+		spectra = whistler_spectra(fileName, triggers(i));
+	
+		% Unwrap
+		spectra = spectra(:);
+		
+		samples(i,:) = spectra';
+		
+	end
 	
 	
 	%% Initialize variables and parameters
