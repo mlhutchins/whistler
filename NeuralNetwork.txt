@@ -1,0 +1,20 @@
+1. Get training dataset
+	a) Get times from .png images
+		i) Generate prepopulated list with dates/minutes
+		ii) Fill in seconds from images
+	b) Get corresponding wideband data
+	c) Generate positive test set images (greyscale)
+		i) Output images
+		ii) Output raw data snippets
+	d) Offset by 5 seconds for negative test set
+
+2. Adapt Neural Network codebase for whistler data input
+
+3. Train neural network
+
+4. Create sliding window search code
+
+5. Test on test set
+	a) Cross validate with window size / step
+	
+6. Port (4) to python
