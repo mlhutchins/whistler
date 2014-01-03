@@ -35,8 +35,6 @@ function neural_network_training
 
 	spectra = whistler_spectra(fileName);
 	
-	sizeFreq = size(spectra,1);
-	sizeTime = size(spectra,2);
 	n = length(spectra(:));
 	nFiles = length(files);
 	
@@ -66,7 +64,7 @@ function neural_network_training
 	X = samples(train,:);
 	y = labels(train,:);
 	
-	remaining = [1 : nFiles];
+	remaining = 1 : nFiles;
 	remaining(train) = [];
 	
 	sampling = randsample(length(remaining), floor(length(remaining) / 2));
@@ -143,7 +141,7 @@ function [ spectra ] = whistler_spectra( widebandFile, startTime )
 
 %% Import wideband file
 
-	[time, eField, Fs] = wideband_import(widebandFile);
+	[~, eField, Fs] = wideband_import(widebandFile);
 	
 %% Get spectral power density
 
