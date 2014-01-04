@@ -88,6 +88,8 @@ function neural_network_training
 	% Create parameter vector
 	initialParams = [initialTheta1(:) ; initialTheta2(:)];
 
+	%% Train neural network
+	
 	% Optimization code options
 	options = optimset('MaxIter', 50);
 
@@ -96,8 +98,6 @@ function neural_network_training
 						   inputLayerSize, ...
 						   hiddenLayerSize, ...
 						   nLabels, X, y, lambda);
-	
-	%% Train neural network
 	
 	% Now, costFunction is a function that takes in only one argument (the
 	% neural network parameters)
@@ -110,22 +110,28 @@ function neural_network_training
 	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
                  nLabels, (hiddenLayerSize + 1));
 
-	% Visualize weights
-	display_data(Theta1(:, 2:end));
-
 	%% Cross validate parameters
 	
-	pred = predict_whistler(Theta1, Theta2, X);
+	trainPred = predict_whistler(Theta1, Theta2, X);
+	trainTrue = y;
 
 	%% Pick best parameters
 	
+	cvPred = predict_whistler(Theta1, Theta2, samples(cv,:));
+	cvTrue = labels(cv);
 	
 	%% Report test results
 	
+	testPred = predict_whistler(Theta1, Theta2, samples(test,:));
+	testTrue = labels(test);
+	
+	% Visualize weights
+	display_data(Theta1(:, 2:end));
 	
 	%% Save parameters
 
-
+	save('whistlerNeuralNet','Theta1','Theta2');
+	
 end
 
 function [ spectra ] = whistler_spectra( widebandFile, startTime )
