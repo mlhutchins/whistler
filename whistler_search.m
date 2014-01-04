@@ -67,3 +67,10 @@ function [ times, dispersion ] = whistler_search( directory )
 	fclose(reportFile)
 	
 end
+
+function whistler_image(spectrogram, chirp, D, time, fileTime, location(j));
+%WHISTLER_IMAGE Creates a .png file with the whistler spectra and
+%	dechirped spectra
+
+
+end
