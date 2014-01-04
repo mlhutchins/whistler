@@ -22,21 +22,48 @@ function [ times, dispersion ] = whistler_search( directory )
 	
 	%% Initalize parameters
 	
+	cutoff = 0.5;
+	reportFile = fopen('whistlers.txt','a+');
 	
-	%% Use sliding window search on each file
+	%% Process each file
 	
-	
-	%% Collate times
-	
-	
-	%% Get best fit dispersion for each whistler
-	
-	
-	%% Save spectrogram .png images and wideband snippets
-	
-	
-	%% Write times and dispersions to file
+	for i = 1 : length(files);
 
+		%% Use sliding window search on each file
 
+		fileName = sprintf('%s%s',directory,files{i});
+
+		[~, eField, Fs] = wideband_import(fileName);
+
+		[ location, spectra, fRange, tw ] = sliding_window( eField, Fs, cutoff );
+
+		if isempty(location)
+			continue
+		end
+
+		%% Print times and dispersions to file
+		
+		fileTime = sscanf(files{i},'WB%04g%02g%02g%02g%02g%02g.dat');
+		
+		for j = 1 : length(location)
+				
+			%% Get best fit dispersion for each whistler
+
+			[D, time, chirp] = dispersion_check(spectra{j}, fRange, tw);
+			
+			%% Save spectrogram .png images and wideband snippets
+
+			whistler_image(spectra{j}, chirp, D, time, fileTime, location(j));
+			
+			%% Write times and dispersions to file
+			
+			fprintf(reportFile, '%04g/%02g/%02g %02g:%02g:%02g, D = %.2f\n',...
+					 fileTime(1:5), location(j), D);
+				 
+		end
+
+	end
+
+	fclose(reportFile)
+	
 end
-
