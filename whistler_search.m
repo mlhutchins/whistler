@@ -1,4 +1,4 @@
-function [ times, dispersion ] = whistler_search( directory )
+function whistler_search( directory )
 %WHISTLER_SEARCH processes wideband files in DIRECTORY and returns the
 %	times and best fit dispersion of located whistlers
 %
@@ -49,11 +49,11 @@ function [ times, dispersion ] = whistler_search( directory )
 				
 			%% Get best fit dispersion for each whistler
 
-			[D, time, chirp] = dispersion_check(spectra{j}, fRange, tw);
+			[D, ~, chirp] = dispersion_check(spectra{j}, fRange, tw);
 			
 			%% Save spectrogram .png images and wideband snippets
 
-			whistler_image(spectra{j}, chirp, D, time, fileTime, location(j));
+			whistler_image(spectra{j}, chirp, D, fRange, tw, fileTime, location(j));
 			
 			%% Write times and dispersions to file
 			
@@ -64,13 +64,28 @@ function [ times, dispersion ] = whistler_search( directory )
 
 	end
 
-	fclose(reportFile)
+	fclose(reportFile);
 	
 end
 
-function whistler_image(spectrogram, chirp, D, time, fileTime, location(j));
+function whistler_image(spectrogram, chirp, D, fileTime, location, directory)
 %WHISTLER_IMAGE Creates a .png file with the whistler spectra and
 %	dechirped spectra
 
+	titleText = sprintf('%04g/%02g/%02g %02g:%02g:%02g, D = %.2f\n',...
+					 fileTime(1:5), location, D);
+				 
+	figure
+	subplot(1,2,1)
+	imagesc(spectrogram)
+	title(titleText);
+	
+	subplot(1,2,2)
+	imagesc(chirp)
+	
+	fileName = sprintf('%swhistler%04g%02g%02g%02g%02g%02g_%02g.png',...
+						directory, fileTime, floor(location));
+					
+	saveas(gcf,fileName,'-dpng');
 
 end
