@@ -11,14 +11,18 @@ function [ spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
 
 %% Normalize power spectra
 
-	power = (power + 30) / 70;
+	maxPower = 0;
+	minPower = -40;
 	
-	power(power > 1) = 1;
-	power(power < -1) = -1;
-	
+	power(power < minPower) = minPower;
+	power(power > maxPower) = maxPower;
+
+	power = (power - minPower / 2) / (range(power(:)) / 2);
+
 %% Cut down in frequency and space
 
-	spectra = power(freqBase < 13000,...
+	spectra = power(freqBase < 10000 &...
+					freqBase > 1000,...
 					timeBase > startTime - startBuffer &...
 					timeBase < startTime + endBuffer);
 				
