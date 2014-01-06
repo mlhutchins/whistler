@@ -87,7 +87,10 @@ function neural_network_training
 		
 	end
 	
+	% Show first 24 whistlers
+	display_data(samples(1:24,:),size(spectra,2));
 	
+	save('trainingData')
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
