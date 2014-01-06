@@ -1,4 +1,4 @@
-function [ timeBase, spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
+function [ spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
 %WHISTLER_SPECTRA takes the FFT of wideband data y and returns the 
 %	portion of the spectra between 0 - 13 kHz as a 2D array
 %
@@ -18,7 +18,7 @@ function [ timeBase, spectra ] = whistler_spectra( timeBase, freqBase, power, st
 %% Add padding as necessary
 
 	padValue = mean(spectra(:));
-	expectedSize = round((startBuffer + endBuffer) * Fs);
+	expectedSize = round((startBuffer + endBuffer) / (timeBase(4) - timeBase(3)));
 	actualSize = size(spectra,2);
 
 	if actualSize < expectedSize
