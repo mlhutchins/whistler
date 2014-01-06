@@ -91,11 +91,18 @@ function [J grad] = nn_cost(nn_params, ...
 	J = (1/m) * sum( -y1(:) - y2(:));
 
 	% Add regularization
+	
+	reg = 0;
 
-	reg1 = sum(sum(Theta1(:,2:end).^2));
-	reg2 = sum(sum(Theta2(:,2:end).^2));
+	for i = 1 : length(Theta);
+	
+		ThetaPrime = Theta{i};
+		
+		reg = reg + sum(sum(ThetaPrime(:,2:end).^2));
+		
+	end
 
-	regularization = (lambda/(2 * m)) * (reg1 + reg2);
+	regularization = (lambda/(2 * m)) * (reg);
 
 	J = J + regularization;
 
