@@ -268,7 +268,8 @@ function neural_network_training
 	fprintf('Test set specificity: %.1f%%\n',specificity * 100);
 
 	% Visualize weights
-	display_data(Theta1(1:24, 2:end),nWidth);
+	ThetaPrime = Theta{1};
+	display_data(ThetaPrime(1:24, 2:end),nWidth);
 	
 %% Save parameters
 
