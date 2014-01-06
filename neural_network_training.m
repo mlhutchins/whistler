@@ -173,7 +173,7 @@ function neural_network_training
 	testTrue = labels(test);
 	
 	% Visualize weights
-	display_data(Theta1(:, 2:end));
+	display_data(Theta1(1:24, 2:end),188);
 	
 %% Save parameters
 
