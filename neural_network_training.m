@@ -143,7 +143,7 @@ function neural_network_training
 	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
 
-	hiddenLayerSize = [100,25];
+	hiddenLayerSize = [100, 25];
 
 	nLabels = length(unique(labels));
 	
@@ -221,13 +221,11 @@ function neural_network_training
 				
 		end
 					
-		Theta{i} = reshape(nnParams(a:d),b,c);
+		Theta{i} = reshape(nnParams(a:d),c,b);
 
 	end
 	
-	save('trainedNeuralNet','-v7.3');
-
-	trainPred = predict_whistler(Theta1, Theta2, X);
+	trainPred = predict_whistler(Theta, X);
 	trainTrue = y;
 
 	[accuracy, precision, sensitivity, specificity] = net_stats(trainPred, trainTrue);
