@@ -121,15 +121,30 @@ function neural_network_training
 
 	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
-	hiddenLayerSize = 400;
+	hiddenLayerSize = [100,25];
 	nLabels = length(unique(labels));
 	
+	% Specify the number of hidden layers
+	hidden = length(hiddenLayerSize);
+	
 	% Random initialize neural network weights
-	initialTheta1 = rand_initialize_weights(inputLayerSize, hiddenLayerSize);
-	initialTheta2 = rand_initialize_weights(hiddenLayerSize, nLabels);
+	
+	initialParams = [];
+	
+	for i = 1 : hidden + 1;
+		
+		if i == 1
+			initialTheta = rand_initialize_weights(inputLayerSize, hiddenLayerSize(1));
+		elseif i < (hidden + 1);
+			initialTheta = rand_initialize_weights(hiddenLayerSize(i-1), hiddenLayerSize(i));
+		else
+			initialTheta = rand_initialize_weights(hiddenLayerSize(i-1), nLabels);
+		end
+		
+		initialParams = [initialParams; initialTheta(:)];
+		
+	end
 
-	% Create parameter vector
-	initialParams = [initialTheta1(:) ; initialTheta2(:)];
 
 %% Train neural network
 	
