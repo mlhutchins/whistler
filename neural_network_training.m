@@ -6,10 +6,14 @@ function neural_network_training
 
 %% Get training dataset file information
 	
+	fprintf('Gathering file lists\n');
+
 	trainingDir = 'training/';
 	widebandDir = 'wideband/';
 	
-	fid = fopen(sprintf('%strigger.txt',trainingDir),'r');
+	triggerFile = sprintf('%strigger.txt',trainingDir);
+	
+	fid = fopen(triggerFile,'r');
 	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
 	trainingList = trainingList';
 	
@@ -51,6 +55,8 @@ function neural_network_training
 	
 %% Import and unwrap spectra
 	
+	fprintf('Importing %s data from %s\n',triggerFile,widebandDir);
+
 	% Import the first to get file sizes
 	
 	i = 1;
@@ -84,10 +90,14 @@ function neural_network_training
 	
 %% Set random seed
 	
+	fprintf('Setting Random Seed\n');
+
 	rng(1);
 	
 %% Split into traing / CV / test
 	
+	fprintf('Selecting Training Set\n');
+
 	train = randsample(nFiles,round(0.8 * nFiles)); %Train with 80% of the data
 	X = samples(train,:);
 	y = labels(train,:);
@@ -104,6 +114,8 @@ function neural_network_training
 	
 %% Initialize variables and parameters
 
+	fprintf('Selecting Training Set\n');
+
 	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
 	hiddenLayerSize = 400;
@@ -118,6 +130,8 @@ function neural_network_training
 
 %% Train neural network
 	
+	fprintf('Training Neural Network\n');
+
 	% Optimization code options
 	options = optimset('MaxIter', 50);
 
@@ -140,16 +154,20 @@ function neural_network_training
 
 %% Cross validate parameters
 	
+	fprintf('Cross Validating\n');
+
 	trainPred = predict_whistler(Theta1, Theta2, X);
 	trainTrue = y;
 
 %% Pick best parameters
-	
+
 	cvPred = predict_whistler(Theta1, Theta2, samples(cv,:));
 	cvTrue = labels(cv);
 	
 %% Report test results
 	
+	fprintf('Starting test\n');
+
 	testPred = predict_whistler(Theta1, Theta2, samples(test,:));
 	testTrue = labels(test);
 	
@@ -158,7 +176,11 @@ function neural_network_training
 	
 %% Save parameters
 
+	fprintf('Saving parameters\n');
+
 	save('whistlerNeuralNet','Theta1','Theta2');
+	
+	fprintf('Done!\n');
 	
 end
 
