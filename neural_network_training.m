@@ -53,24 +53,26 @@ function neural_network_training
 	
 	% Import the first to get file sizes
 	
-	fileName = sprintf('%s%s',widebandDir,files{1});
-
-	spectra = whistler_spectra(fileName);
+	i = 1;
 	
+	fileName = sprintf('%s%s',widebandDir,files{i});
+	
+	spectra = get_spectra(fileName, triggers(i));
+		
 	n = length(spectra(:));
 	nFiles = length(files);
 	
-	samples = zeroes(nFiles, n);
+	samples = zeros(nFiles, n);
+	
+	% Import the wideband files
 	
 	for i = 1 : nFiles
 		
 		fileName = sprintf('%s%s',widebandDir,files{i});
 	
 		% Import wideband file
-
-		[~, eField, Fs] = wideband_import(fileName);
 		
-		spectra = whistler_spectra(fileName, triggers(i));
+		spectra = get_spectra(fileName, triggers(i));
 	
 		% Unwrap
 		spectra = spectra(:);
@@ -100,7 +102,7 @@ function neural_network_training
 	test = remaining; %Test with last 10% of the data
 
 	
-	%% Initialize variables and parameters
+%% Initialize variables and parameters
 
 	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
@@ -114,7 +116,7 @@ function neural_network_training
 	% Create parameter vector
 	initialParams = [initialTheta1(:) ; initialTheta2(:)];
 
-	%% Train neural network
+%% Train neural network
 	
 	% Optimization code options
 	options = optimset('MaxIter', 50);
@@ -136,17 +138,17 @@ function neural_network_training
 	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
                  nLabels, (hiddenLayerSize + 1));
 
-	%% Cross validate parameters
+%% Cross validate parameters
 	
 	trainPred = predict_whistler(Theta1, Theta2, X);
 	trainTrue = y;
 
-	%% Pick best parameters
+%% Pick best parameters
 	
 	cvPred = predict_whistler(Theta1, Theta2, samples(cv,:));
 	cvTrue = labels(cv);
 	
-	%% Report test results
+%% Report test results
 	
 	testPred = predict_whistler(Theta1, Theta2, samples(test,:));
 	testTrue = labels(test);
@@ -154,7 +156,7 @@ function neural_network_training
 	% Visualize weights
 	display_data(Theta1(:, 2:end));
 	
-	%% Save parameters
+%% Save parameters
 
 	save('whistlerNeuralNet','Theta1','Theta2');
 	
@@ -182,3 +184,12 @@ W = rand(L_out, 1 + L_in) * 2 * epsilon_init - epsilon_init;
 
 end
 
+function spectra = get_spectra(fileName, trigger)
+
+	[~, eField, Fs] = wideband_import(fileName);
+	
+	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
+	
+	spectra = whistler_spectra( timeBase, freqBase, power, trigger );
+
+end
