@@ -44,22 +44,32 @@ function [J grad] = nn_cost(nn_params, ...
 	%  Setup some useful variables
 
 	m = size(X, 1);
+	nLayers = length(hiddenLayerSize) + 1;
 
 %% Forward propagate network to get h(theta)
 
-	a1 = [ones(m, 1) X];
+	z = cell(nLayers,1);
+	a = z;
+	
+	z{1} = X;
 
-	z2 = a1 * Theta1';
-
-	a2 = sigmoid(z2);
-
-	a2 = [ones(m, 1) a2];
-
-	z3 = a2 * Theta2';
-
-	a3 = sigmoid(z3);
-
-	h = a3;
+	for i = 1 : nLayers
+		
+		if i == 1;
+			z{i} = X;
+		else
+		
+			zPrime = a{i} * Theta{i}';
+		
+			z{i} = sigmoid(zPrime);
+		
+		end
+		
+		a{i} = [ones(m,1), z{i}];
+				
+	end
+	
+	h = a{end};
 
 %% Get cost function J(theta)
 
