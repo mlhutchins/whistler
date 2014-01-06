@@ -55,7 +55,7 @@ function [J, grad] = nn_cost(nnParams, ...
 				
 		end
 					
-		Theta{i} = reshape(nnParams(a:d),b,c);
+		Theta{i} = reshape(nnParams(a:d),c,b);
 
 	end
 
@@ -75,17 +75,20 @@ function [J, grad] = nn_cost(nnParams, ...
 			
 		else
 		
-			zPrime = a{i - 1} * Theta{i - 1};
+			zPrime = a{i - 1} * Theta{i - 1}';
 		
 			z{i} = sigmoid(zPrime);
 		
 		end
 		
+		
 		a{i} = [ones(m,1), z{i}];
 				
 	end
 	
-	h = a{end}(:,2:end);
+	a{end} = a{end}(:,2:end);
+	
+	h = a{end};
 
 %% Get cost function J(theta)
 
@@ -104,7 +107,7 @@ function [J, grad] = nn_cost(nnParams, ...
 
 	y1 = bsxfun(@times,yRemap,log(h));
 	y2 = bsxfun(@times,~yRemap,log(1-h));
-	J = (1/m) * sum( -y1(:) - y2(:));
+	J = (1/m) * nansum( -y1(:) - y2(:));
 
 	% Add regularization
 	
@@ -133,40 +136,38 @@ function [J, grad] = nn_cost(nnParams, ...
 	for i = nLayers : -1 : 1
 		
 		if i == nLayers
-			delta{i} = a{end}(:,2:end) - yRemap;
+			delta{i} = a{end} - yRemap;
 		else
-			ThetaPrime = Theta{i + 1}';
+			ThetaPrime = Theta{i + 1};
 			delta{i} = delta{i + 1} * ThetaPrime(:,2:end) .* sigmoid_gradient(z{i + 1});
 		end	
 	end
 
 	% Accumulate Errors into Grad Arrays
-	
-	Theta_grad{nLayers - 1} = [];
 		
-	for i = 1 : nLayers - 1
+	Theta_grad{nLayers} = [];
+		
+	for i = 1 : nLayers
 		ThetaPrime = Theta{i};
 		ThetaGradPrime = (1 / m) * delta{i}' * a{i};
-		ThetaGradPrime = ThetaGradPrime';
 		
 		% Regularize
 		ThetaGradPrime(:,2:end) = ThetaGradPrime(:,2:end) + (lambda/m) * ThetaPrime(:,2:end);
 		Theta_grad{i} = ThetaGradPrime;
 	end
-	
 
 %% Unroll gradients
 
 	grad = [];
 
-	for i = 1 : nLayers - 1
+	for i = 1 : nLayers
 		
 		ThetaGradPrime = Theta_grad{i};
 
 		grad = [grad ; ThetaGradPrime(:)];
 		
 	end
-
+	
 end
 
 
