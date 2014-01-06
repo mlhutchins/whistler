@@ -14,5 +14,9 @@ function p = predict_whistler(Theta1, Theta2, X)
 	h1 = sigmoid([ones(m, 1) X] * Theta1');
 	h2 = sigmoid([ones(m, 1) h1] * Theta2');
 	[~, p] = max(h2, [], 2);
+	
+%% Set to positive/negetive index
+
+	p = logical(p - 2);
 
 end
