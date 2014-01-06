@@ -96,21 +96,4 @@ function [J grad] = nn_cost(nn_params, ...
 
 end
 
-function g = sigmoid(z)
-%SIGMOID Compute sigmoid functoon
-%   J = SIGMOID(z) computes the sigmoid of z.
-
-	g = 1.0 ./ (1.0 + exp(-z));
-
-end
-
-function g = sigmoid_gradient(z)
-%SIGMOIDGRADIENT returns the gradient of the sigmoid function
-%evaluated at z
-%   g = SIGMOIDGRADIENT(z) computes the gradient of the sigmoid function
-%   evaluated at z. 
-
-	g = sigmoid(z) .* (1 - sigmoid(z));
-
-end
 
