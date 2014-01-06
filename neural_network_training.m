@@ -117,7 +117,7 @@ function neural_network_training
 	
 %% Initialize variables and parameters
 
-	fprintf('Selecting Training Set\n');
+	fprintf('Initializing Neural Network\n');
 
 	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
@@ -155,9 +155,7 @@ function neural_network_training
 	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
                  nLabels, (hiddenLayerSize + 1));
 
-%% Cross validate parameters
-	
-	fprintf('Cross Validating\n');
+	save('trainedNeuralNet','Theta1','Theta2');
 
 	trainPred = predict_whistler(Theta1, Theta2, X);
 	trainTrue = y;
