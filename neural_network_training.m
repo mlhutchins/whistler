@@ -18,7 +18,7 @@ function neural_network_training
 	trainingList = trainingList';
 	
 	triggersPos = trainingList(:,7);
-	triggersNeg = triggersPos - 5;
+	triggersNeg = [triggersPos - 5; triggersPos + 5];
 	
 	triggers = [triggersPos; triggersNeg];
 	labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
@@ -119,7 +119,7 @@ function neural_network_training
 
 	fprintf('Initializing Neural Network\n');
 
-	lambda = 0.5; % Regularization parameter
+	lambda = 0.1; % Regularization parameter
 	inputLayerSize = size(X,2);
 	hiddenLayerSize = 400;
 	nLabels = length(unique(labels));
@@ -136,7 +136,7 @@ function neural_network_training
 	fprintf('Training Neural Network\n');
 
 	% Optimization code options
-	options = optimset('MaxIter', 50);
+	options = optimset('MaxIter', 100);
 
 	% Create "short hand" for the cost function to be minimized
 	costFunction = @(p) nn_cost(p, ...
