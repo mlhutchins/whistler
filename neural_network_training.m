@@ -148,17 +148,17 @@ function neural_network_training
 	nLabels = length(unique(labels));
 	
 	% Specify the number of hidden layers
-	nHidden = length(hiddenLayerSize);
+	nLayers = length(hiddenLayerSize) + 1;
 	
 	% Random initialize neural network weights
 	
 	initialParams = [];
 	
-	for i = 1 : nHidden + 1;
+	for i = 1 : nLayers;
 		
 		if i == 1
-			initialTheta = rand_initialize_weights(inputLayerSize, hiddenLayerSize(1));
-		elseif i < (hidden + 1);
+			initialTheta = rand_initialize_weights(inputLayerSize, hiddenLayerSize(i));
+		elseif i < nLayers;
 			initialTheta = rand_initialize_weights(hiddenLayerSize(i-1), hiddenLayerSize(i));
 		else
 			initialTheta = rand_initialize_weights(hiddenLayerSize(i-1), nLabels);
