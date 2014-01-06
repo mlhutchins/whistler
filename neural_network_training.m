@@ -63,9 +63,12 @@ function neural_network_training
 	
 	fileName = sprintf('%s%s',widebandDir,files{i});
 	
-	spectra = get_spectra(fileName, triggers(i));
-		
-	n = length(spectra(:));
+	spectraSize = get_spectra(fileName, triggers(i));
+	
+	
+	
+	n = length(spectraSize(:));
+	nWidth = size(spectraSize,2);
 	nFiles = length(files);
 	
 	samples = zeros(nFiles, n);
@@ -88,7 +91,7 @@ function neural_network_training
 	end
 	
 	% Show first 24 whistlers
-	display_data(samples(1:24,:),size(spectra,2));
+	display_data(samples(1:24,:),nWidth);
 	
 	save('trainingData')
 %% Set random seed
