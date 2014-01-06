@@ -165,29 +165,43 @@ function neural_network_training
 
 	% Obtain Theta1 and Theta2 back from nnParams
 	
-	Theta{1} = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
-				 hiddenLayerSize(1), (inputLayerSize + 1));	
-
-	for i = 1 : nHidden;
+	Theta = cell(nLayers,1);
+	
+	for i = 1 : nLayers;
 		
 		if i == 1
-			Theta{i + 1} = reshape(nnParams(1:hiddenLayerSize(i) * (inputLayerSize + 1)), ...
-						hiddenLayerSize(1), (inputLayerSize + 1));	
-		elseif i == nHidden
-			if nHidden == 1
-				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
-					 nLabels, (hiddenLayerSize(i) + 1));
-			else
-				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (hiddenLayerSize(i-1) + 1))):end), ...
-					 nLabels, (hiddenLayerSize(i) + 1));	
-			end
-		else
-			Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
-					 hiddenLayerSize(i + 1), (hiddenLayerSize(i) + 1));		
+			
+			a = 1; % Start point
+			b = (inputLayerSize + 1); % First layer size + 1 (bias)
+			c = hiddenLayerSize(i); % Next layer size
+
+			d = a + b * c;
+			index = d;
+			
+		elseif i < nLayers
+			
+			a = index + 1; % Start point
+			b = (hiddenLayerSize(i) + 1); % Current layer size + 1 (bias)
+			c = hiddenLayerSize(i + 1); % Next layer size
+
+			d = a + b * c;
+			index = d;
+			
+		elseif i == nLayers
+
+			a = index + 1; % Start point
+			b = (hiddenLayerSize(i) + 1); % Current layer size + 1 (bias)
+			c = nLabels; % Next layer size
+
+			d = a + b * c;
+			index = d;
+				
 		end
+					
+		Theta{i} = reshape(nnParams(a:b),c,d);
 		
 	end
-
+	
 	save('trainedNeuralNet','Theta');
 
 	trainPred = predict_whistler(Theta1, Theta2, X);
