@@ -1,6 +1,6 @@
-function [J grad] = nn_cost(nn_params, ...
-                                   input_layer_size, ...
-                                   hidden_layer_size, ...
+function [J, grad] = nn_cost(nnParams, ...
+                                   inputLayerSize, ...
+                                   hiddenLayerSize, ...
                                    nLabels, ...
                                    X, y, lambda)
 %NN_COST Implements the neural network cost function for a two layer
@@ -15,15 +15,14 @@ function [J grad] = nn_cost(nn_params, ...
 %
 %	Code adapted from: Andrew Ng's Machine Learning Course
 
-
 %  Setup some useful variables
 
 	m = size(X, 1);
-	nLayers = length(hidden_layer_size) + 1;
-
+	nLayers = length(hiddenLayerSize) + 1;
+	
 %% Reshape nn_params back into the parameters Thetas
 
-	Theta = cell(nLayers,1);
+	Theta{nLayers} = [];
 	
 	for i = 1 : nLayers;
 		
@@ -64,7 +63,7 @@ function [J grad] = nn_cost(nn_params, ...
 
 %% Forward propagate network to get h(theta)
 
-	z = cell(nLayers,1);
+	z{nLayers} = [];
 	a = z;
 	
 	z{1} = X;
@@ -128,7 +127,7 @@ function [J grad] = nn_cost(nn_params, ...
 
 	% Set errors
 
-	delta = cell(nLayers,1);
+	delta{nLayers} = [];
 	
 	for i = nLayers : 1
 		
