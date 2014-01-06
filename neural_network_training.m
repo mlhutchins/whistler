@@ -133,9 +133,9 @@ function neural_network_training
 
 	fprintf('Initializing Neural Network\n');
 
-	lambda = 0.1; % Regularization parameter
+	lambda = 0.5; % Regularization parameter
 	inputLayerSize = size(X,2);
-	hiddenLayerSize = 400;
+	hiddenLayerSize = 100;
 	nLabels = length(unique(labels));
 	
 	% Random initialize neural network weights
