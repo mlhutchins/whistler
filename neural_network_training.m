@@ -72,7 +72,7 @@ function neural_network_training
 	
 	% Import the wideband files
 	
-	for i = 1 : nFiles
+	parfor i = 1 : nFiles
 		
 		fileName = sprintf('%s%s',widebandDir,files{i});
 	
