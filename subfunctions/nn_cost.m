@@ -56,7 +56,9 @@ function [J grad] = nn_cost(nn_params, ...
 	for i = 1 : nLayers
 		
 		if i == 1;
+			
 			z{i} = X;
+			
 		else
 		
 			zPrime = a{i} * Theta{i}';
@@ -110,23 +112,43 @@ function [J grad] = nn_cost(nn_params, ...
 
 	% Set errors
 
-	delta3 = a3 - yRemap;
-	delta2 = delta3 * Theta2(:,2:end) .* sigmoid_gradient(z2);
+	delta = cell(nLayers,1);
+	
+	for i = nLayers : 1
+		
+		if i == nLayers
+			delta{i} = a{i} - yRemap;
+		else
+			ThetaPrime = Theta{i};
+			delta{i} = delta{i + 1} * ThetaPrime(:,2:end) .* sigmoid_gradiant(z{i});
+		end	
+	end
 
 	% Accumulate Errors into Grad Arrays
 
-	Theta1_grad = (1 / m) * delta2' * a1;
-	Theta2_grad = (1 / m) * delta3' * a2;
-
-	% Regularize
-
-	Theta1_grad(:,2:end) = Theta1_grad(:,2:end) + (lambda/m) * Theta1(:,2:end);
-	Theta2_grad(:,2:end) = Theta2_grad(:,2:end) + (lambda/m) * Theta2(:,2:end);
-
+	Theta_grad = cell{nLayers - 1,1};
+	
+	for i = 1 : nLayers - 1
+		ThetaPrime = {i};
+		ThetaGradPrime = (1 / m) * delta{i + 1}' * a{i};
+		
+		% Regularize
+		ThetaGradPrime(:,2:end) = ThetaGradPrime(:,2:end) + (lambda/m) * ThetaPrime(:,2:end);
+		Theta_grad{i} = ThetaGradPrime;
+	end
+	
 
 %% Unroll gradients
 
-	grad = [Theta1_grad(:) ; Theta2_grad(:)];
+	grad = [];
+
+	for i = 1 : nLayers - 1
+		
+		ThetaGradPrime = Theta_grad{i};
+
+		grad = [grad ; ThetaGradPrime(:)];
+		
+	end
 
 end
 
