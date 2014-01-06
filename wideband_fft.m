@@ -42,7 +42,7 @@ function [ tw, fw, SdB ] = wideband_fft( y, Fs )
     SdB = 10*log10(S);
     Mw = [1:Nw/2];
     fw = Fs .* Mw ./ Nw;
-    tw = [1:nwin+1] .* 0.5 .* Nw ./ Fs;
+    tw = [1:nwin] .* 0.5 .* Nw ./ Fs;
 
 end
 
