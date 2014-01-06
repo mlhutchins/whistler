@@ -1,11 +1,11 @@
 function [J grad] = nn_cost(nn_params, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
-                                   num_labels, ...
+                                   nLabels, ...
                                    X, y, lambda)
 %NN_COST Implements the neural network cost function for a two layer
 %neural network which performs classification
-%   [J grad] = NN_COST(nn_params, hidden_layer_size, num_labels, ...
+%   [J grad] = NN_COST(nn_params, hidden_layer_size, nLabels, ...
 %   X, y, lambda) computes the cost and gradient of the neural network. The
 %   parameters for the neural network are "unrolled" into the vector
 %   nn_params and need to be converted back into the weight matrices. 
@@ -16,35 +16,51 @@ function [J grad] = nn_cost(nn_params, ...
 %	Code adapted from: Andrew Ng's Machine Learning Course
 
 
+%  Setup some useful variables
+
+	m = size(X, 1);
+	nLayers = length(hidden_layer_size) + 1;
+
 %% Reshape nn_params back into the parameters Thetas
 
-	Theta{1} = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
-				 hiddenLayerSize(1), (inputLayerSize + 1));	
-
-	for i = 1 : nHidden;
+	Theta = cell(nLayers,1);
+	
+	for i = 1 : nLayers;
 		
 		if i == 1
-			Theta{i + 1} = reshape(nnParams(1:hiddenLayerSize(i) * (inputLayerSize + 1)), ...
-						hiddenLayerSize(1), (inputLayerSize + 1));	
-		elseif i == nHidden
-			if nHidden == 1
-				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
-					 nLabels, (hiddenLayerSize(i) + 1));
-			else
-				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (hiddenLayerSize(i-1) + 1))):end), ...
-					 nLabels, (hiddenLayerSize(i) + 1));	
-			end
-		else
-			Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
-					 hiddenLayerSize(i + 1), (hiddenLayerSize(i) + 1));		
+			
+			a = 1; % Start point
+			b = (inputLayerSize + 1); % First layer size + 1 (bias)
+			c = hiddenLayerSize(i); % Next layer size
+
+			d = a + b * c;
+			index = d;
+			
+		elseif i < nLayers
+			
+			a = index + 1; % Start point
+			b = (hiddenLayerSize(i) + 1); % Current layer size + 1 (bias)
+			c = hiddenLayerSize(i + 1); % Next layer size
+
+			d = a + b * c;
+			index = d;
+			
+		elseif i == nLayers
+
+			a = index + 1; % Start point
+			b = (hiddenLayerSize(i) + 1); % Current layer size + 1 (bias)
+			c = nLabels; % Next layer size
+
+			d = a + b * c;
+			index = d;
+				
 		end
+					
+		Theta{i} = reshape(nnParams(a:b),c,d);
+
 		
 	end
 
-	%  Setup some useful variables
-
-	m = size(X, 1);
-	nLayers = length(hiddenLayerSize) + 1;
 
 %% Forward propagate network to get h(theta)
 
