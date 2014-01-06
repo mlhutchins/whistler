@@ -125,13 +125,13 @@ function neural_network_training
 	nLabels = length(unique(labels));
 	
 	% Specify the number of hidden layers
-	hidden = length(hiddenLayerSize);
+	nHidden = length(hiddenLayerSize);
 	
 	% Random initialize neural network weights
 	
 	initialParams = [];
 	
-	for i = 1 : hidden + 1;
+	for i = 1 : nHidden + 1;
 		
 		if i == 1
 			initialTheta = rand_initialize_weights(inputLayerSize, hiddenLayerSize(1));
@@ -164,13 +164,31 @@ function neural_network_training
 	[nnParams, cost] = fmincg(costFunction, initialParams, options);
 
 	% Obtain Theta1 and Theta2 back from nnParams
-	Theta1 = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
-				 hiddenLayerSize, (inputLayerSize + 1));
+	
+	Theta{1} = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
+				 hiddenLayerSize(1), (inputLayerSize + 1));	
 
-	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
-                 nLabels, (hiddenLayerSize + 1));
+	for i = 1 : nHidden;
+		
+		if i == 1
+			Theta{i + 1} = reshape(nnParams(1:hiddenLayerSize(i) * (inputLayerSize + 1)), ...
+						hiddenLayerSize(1), (inputLayerSize + 1));	
+		elseif i == nHidden
+			if nHidden == 1
+				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
+					 nLabels, (hiddenLayerSize(i) + 1));
+			else
+				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (hiddenLayerSize(i-1) + 1))):end), ...
+					 nLabels, (hiddenLayerSize(i) + 1));	
+			end
+		else
+			Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
+					 hiddenLayerSize(i + 1), (hiddenLayerSize(i) + 1));		
+		end
+		
+	end
 
-	save('trainedNeuralNet','Theta1','Theta2');
+	save('trainedNeuralNet','Theta');
 
 	trainPred = predict_whistler(Theta1, Theta2, X);
 	trainTrue = y;
