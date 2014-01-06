@@ -4,93 +4,107 @@ function neural_network_training
 %
 %	Written by: Michael Hutchins
 
-%% Get training dataset file information
-	
-	fprintf('Gathering file lists\n');
+%% Set whether to re-import the wideband data
 
-	trainingDir = 'training/';
-	widebandDir = 'wideband/';
-	
-	triggerFile = sprintf('%strigger.txt',trainingDir);
-	
-	fid = fopen(triggerFile,'r');
-	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
-	trainingList = trainingList';
-	
-	triggersPos = trainingList(:,7);
-	triggersNeg = [triggersPos - 5; triggersPos + 5];
-	
-	triggers = [triggersPos; triggersNeg];
-	labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
-	
-	% Double for negative examples
-	trainingList = [trainingList; trainingList];
-	
-	files = cell(size(trainingList,1),1);
-	
-	for i = 1 : size(trainingList,1);
-		files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
-	end
-	
-%% List all files to be downloaded from server (if needed)
+	importData = false;
+	dataFile = 'trainindData_Norm.mat';
 
-	fid = fopen('download.sh','w+');
+	if importData
 
-	fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
-	fprintf(fid,'scp ');
-	
-	oldName = '';
-	
-	for i = 1 : length(files)
-		newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',trainingList(i,1:3),files{i});
-		
-		if ~strcmp(newName,oldName)
-			fprintf(fid,newName);
+	%% Get training dataset file information
+
+		fprintf('Gathering file lists\n');
+
+		trainingDir = 'training/';
+		widebandDir = 'wideband/';
+
+		triggerFile = sprintf('%strigger.txt',trainingDir);
+
+		fid = fopen(triggerFile,'r');
+		trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
+		trainingList = trainingList';
+
+		triggersPos = trainingList(:,7);
+		triggersNeg = [triggersPos - 5; triggersPos + 5];
+
+		triggers = [triggersPos; triggersNeg];
+		labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
+
+		% Double for negative examples
+		trainingList = [trainingList; trainingList];
+
+		files = cell(size(trainingList,1),1);
+
+		for i = 1 : size(trainingList,1);
+			files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
 		end
-		
-		oldName = newName;
-	end
-	
-	fprintf(fid,'mlhutch@flash5.ess.washington.edu:widebandTemp/');
-	
-%% Import and unwrap spectra
-	
-	fprintf('Importing %s data from %s\n',triggerFile,widebandDir);
 
-	% Import the first to get file sizes
-	
-	i = 1;
-	
-	fileName = sprintf('%s%s',widebandDir,files{i});
-	
-	spectra = get_spectra(fileName, triggers(i));
-		
-	n = length(spectra(:));
-	nFiles = length(files);
-	
-	samples = zeros(nFiles, n);
-	
-	% Import the wideband files
-	
-	parfor i = 1 : nFiles
-		
+	%% List all files to be downloaded from server (if needed)
+
+		fid = fopen('download.sh','w+');
+
+		fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
+		fprintf(fid,'scp ');
+
+		oldName = '';
+
+		for i = 1 : length(files)
+			newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',trainingList(i,1:3),files{i});
+
+			if ~strcmp(newName,oldName)
+				fprintf(fid,newName);
+			end
+
+			oldName = newName;
+		end
+
+		fprintf(fid,'mlhutch@flash5.ess.washington.edu:widebandTemp/');
+
+	%% Import and unwrap spectra
+
+		fprintf('Importing %s data from %s\n',triggerFile,widebandDir);
+
+		% Import the first to get file sizes
+
+		i = 1;
+
 		fileName = sprintf('%s%s',widebandDir,files{i});
-	
-		% Import wideband file
-		
+
 		spectra = get_spectra(fileName, triggers(i));
+
+		n = length(spectra(:));
+		nFiles = length(files);
+
+		samples = zeros(nFiles, n);
+
+		% Import the wideband files
+
+		parfor i = 1 : nFiles
+
+			fileName = sprintf('%s%s',widebandDir,files{i});
+
+			% Import wideband file
+
+			spectra = get_spectra(fileName, triggers(i));
+
+			% Unwrap
+			spectra = spectra(:);
+
+			samples(i,:) = spectra';
+
+		end
+
+		% Show first 24 whistlers
+		display_data(samples(1:24,:),size(spectra,2));
+
+		save(dataFile)
 	
-		% Unwrap
-		spectra = spectra(:);
-		
-		samples(i,:) = spectra';
-		
+	else
+
+		load(dataFile)
+	
 	end
-	
-	% Show first 24 whistlers
-	display_data(samples(1:24,:),size(spectra,2));
-	
-	save('trainingData')
+
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
@@ -203,6 +217,8 @@ function neural_network_training
 %% Save parameters
 
 	fprintf('Saving parameters\n');
+
+	save('neuralNetDebug');
 
 	save('whistlerNeuralNet','Theta1','Theta2');
 	
