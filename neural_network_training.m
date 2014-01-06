@@ -28,6 +28,27 @@ function neural_network_training
 		files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
 	end
 	
+%% List all files to be downloaded from server (if needed)
+
+	fid = fopen('download.sh','w+');
+
+	fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
+	fprintf(fid,'scp ');
+	
+	oldName = '';
+	
+	for i = 1 : length(files)
+		newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',trainingList(i,1:3),files{i});
+		
+		if ~strcmp(newName,oldName)
+			fprintf(fid,newName);
+		end
+		
+		oldName = newName;
+	end
+	
+	fprintf(fid,'mlhutch@flash5.ess.washington.edu:widebandTemp/');
+	
 %% Import and unwrap spectra
 	
 	% Import the first to get file sizes
