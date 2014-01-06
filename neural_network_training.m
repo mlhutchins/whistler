@@ -155,7 +155,7 @@ function neural_network_training
 	Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), ...
                  nLabels, (hiddenLayerSize + 1));
 
-	save('trainedNeuralNet','Theta1','Theta2');
+	save('trainedNeuralNet');
 
 	trainPred = predict_whistler(Theta1, Theta2, X);
 	trainTrue = y;
