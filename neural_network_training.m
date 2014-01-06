@@ -174,7 +174,7 @@ function neural_network_training
 	fprintf('Training Neural Network\n');
 
 	% Optimization code options
-	options = optimset('MaxIter', 100);
+	options = optimset('MaxIter', 50);
 
 	% Create "short hand" for the cost function to be minimized
 	costFunction = @(p) nn_cost(p, ...
