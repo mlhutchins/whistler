@@ -16,13 +16,30 @@ function [J grad] = nn_cost(nn_params, ...
 %	Code adapted from: Andrew Ng's Machine Learning Course
 
 
-%% Reshape nn_params back into the parameters Theta1 and Theta2,
-%	the weight matrices for our 2 layer neural network
-	Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-                 hidden_layer_size, (input_layer_size + 1));
+%% Reshape nn_params back into the parameters Thetas
 
-	Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
-                 num_labels, (hidden_layer_size + 1));
+	Theta{1} = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), ...
+				 hiddenLayerSize(1), (inputLayerSize + 1));	
+
+	for i = 1 : nHidden;
+		
+		if i == 1
+			Theta{i + 1} = reshape(nnParams(1:hiddenLayerSize(i) * (inputLayerSize + 1)), ...
+						hiddenLayerSize(1), (inputLayerSize + 1));	
+		elseif i == nHidden
+			if nHidden == 1
+				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
+					 nLabels, (hiddenLayerSize(i) + 1));
+			else
+				Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (hiddenLayerSize(i-1) + 1))):end), ...
+					 nLabels, (hiddenLayerSize(i) + 1));	
+			end
+		else
+			Theta{i + 1} = reshape(nnParams((1 + (hiddenLayerSize(i) * (inputLayerSize + 1))):end), ...
+					 hiddenLayerSize(i + 1), (hiddenLayerSize(i) + 1));		
+		end
+		
+	end
 
 	%  Setup some useful variables
 
