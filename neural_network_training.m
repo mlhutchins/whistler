@@ -7,16 +7,17 @@ function neural_network_training
 %% Get training dataset file information
 	
 	trainingDir = 'training/';
-	widebandDir = 'data/';
+	widebandDir = 'wideband/';
 	
 	fid = fopen(sprintf('%strigger.txt',trainingDir),'r');
 	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
+	trainingList = trainingList';
 	
 	triggersPos = trainingList(:,7);
 	triggersNeg = triggersPos - 5;
 	
 	triggers = [triggersPos; triggersNeg];
-	labels = [true(length(triggerPos),1); false(length(triggerNeg),1)];
+	labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
 	
 	% Double for negative examples
 	trainingList = [trainingList; trainingList];
@@ -24,7 +25,7 @@ function neural_network_training
 	files = cell(size(trainingList,1),1);
 	
 	for i = 1 : size(trainingList,1);
-		files{i} = sprintf('WB%04g%02g%02g%02g%02g%02g.dat',trainingList(i,1:6));
+		files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
 	end
 	
 %% Import and unwrap spectra
