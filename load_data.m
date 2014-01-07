@@ -65,7 +65,7 @@ function [ images, labels, nFiles ] = load_data
 
 	[spectraSize] = get_spectra(fileName, triggers(i));
 
-	n = size(spectraSize(:));
+	n = size(spectraSize);
 	nFiles = length(files);
 
 	images = zeros(nFiles, n(1), n(2));
