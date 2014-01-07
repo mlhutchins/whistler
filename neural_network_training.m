@@ -6,6 +6,8 @@ function neural_network_training
 
 %% Set whether to re-import the wideband data
 
+	addpath('subfunctions/');
+
 	importData = false;
 	dataFile = 'trainingData_Norm.mat';
 
