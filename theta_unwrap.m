@@ -1,5 +1,5 @@
 function [Theta] = theta_unwrap(nnParams, inputLayerSize, hiddenLayerSize, nLabels)
-%% THETA_UNWRAP(nnParams, inputLayerSize, hiddenLayerSize) unwraps
+%THETA_UNWRAP(nnParams, inputLayerSize, hiddenLayerSize) unwraps
 %	nnParams into the Theta cell array for the specified size neural
 %	network
 
