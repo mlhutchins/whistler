@@ -5,7 +5,7 @@ function initialParams = rand_initialize_weights(inputLayerSize, hiddenLayerSize
 %	Written by: Michael Hutchins
 
 	initialParams = [];
-	nLayers = length(hiddenLayerSize + 1);
+	nLayers = length(hiddenLayerSize) + 1;
 	
 	for i = 1 : nLayers;
 		
