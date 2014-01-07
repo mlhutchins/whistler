@@ -1,118 +1,14 @@
-function neural_network_training
-%NEURAL_NETWORK_TRAINING loads in training data set of whistlers and background
-%	noise and gets the best fit neural network with performance analysis
+function [Theta, statistics] = neural_network_training(data,neuralNetwork)
+%NEURAL_NETWORK_TRAINING(data, neuralNetwork) trains the neuralNetwork with
+%	the data loaded into sampels with cross-validation and statistics testing
 %
 %	Written by: Michael Hutchins
 
-%% Set whether to re-import the wideband data
+%% Exract sample data
 
-	addpath('subfunctions/');
-
-	importData = false;
-	dataFile = 'trainingData_Norm.mat';
-
-	if importData
-
-	%% Get training dataset file information
-
-		fprintf('Gathering file lists\n');
-
-		trainingDir = 'training/';
-		widebandDir = 'wideband/';
-
-		triggerFile = sprintf('%strigger.txt',trainingDir);
-
-		fid = fopen(triggerFile,'r');
-		trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
-		trainingList = trainingList';
-
-		triggersPos = trainingList(:,7);
-		triggersNeg = [triggersPos - 5; triggersPos + 5];
-
-		triggers = [triggersPos; triggersNeg];
-		labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
-
-		% Double for negative examples
-		trainingList = [trainingList; trainingList];
-
-		files = cell(size(trainingList,1),1);
-
-		for i = 1 : size(trainingList,1);
-			files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
-		end
-
-
-	%% List all files to be downloaded from server (if needed)
-
-		fid = fopen('download.sh','w+');
-
-		fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
-		fprintf(fid,'scp ');
-
-		oldName = '';
-
-		for i = 1 : length(files)
-			newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',trainingList(i,1:3),files{i});
-
-			if ~strcmp(newName,oldName)
-				fprintf(fid,newName);
-			end
-
-			oldName = newName;
-		end
-
-		fprintf(fid,'mlhutch@flash5.ess.washington.edu:widebandTemp/');
-
-	%% Import and unwrap spectra
-
-		fprintf('Importing %s data from %s\n',triggerFile,widebandDir);
-
-		% Import the first to get file sizes
-
-		i = 1;
-
-		fileName = sprintf('%s%s',widebandDir,files{i});
-
-		spectraSize = get_spectra(fileName, triggers(i));
-
-		n = length(spectraSize(:));
-		nWidth = size(spectraSize,2);
-		nFiles = length(files);
-
-		samples = zeros(nFiles, n);
-
-		% Import the wideband files
-
-		parfor i = 1 : nFiles
-
-			fileName = sprintf('%s%s',widebandDir,files{i});
-
-			% Import wideband file
-
-			spectra = get_spectra(fileName, triggers(i));
-
-			% Unwrap
-			spectra = spectra(:);
-
-			samples(i,:) = spectra';
-
-		end
-
-		% Unwrap
-		spectra = spectra(:);
-		
-		samples(i,:) = spectra';
-		
-
-		% Show first 24 whistlers
-		display_data(samples(1:24,:),nWidth);
-
-		save(dataFile)
-	
-	else
-
-		load(dataFile)	
-	end
+	samples = data.samples;
+	labels = data.labels;
+	nFiles = data.nFiles;
 
 %% Set random seed
 	
@@ -142,10 +38,10 @@ function neural_network_training
 
 	fprintf('Initializing Neural Network\n');
 
-	lambda = 0.5; % Regularization parameter
+	lambda = neuralNetwork.lambda; % Initial Regularization parameter
 	inputLayerSize = size(X,2);
 
-	hiddenLayerSize = [100, 25];
+	hiddenLayerSize = neuralNetwork.hiddenLayerSize;
 
 	nLabels = length(unique(labels));
 	
@@ -158,7 +54,7 @@ function neural_network_training
 	fprintf('Training Neural Network\n');
 
 	% Optimization code options
-	options = optimset('MaxIter', 50);
+	options = optimset('MaxIter', neuralNetwork.maxIter);
 
 	% Create "short hand" for the cost function to be minimized
 	costFunction = @(p) nn_cost(p, ...
@@ -190,7 +86,7 @@ function neural_network_training
 	
 %% Pick best parameters
 
-	cvPred = predict_whistler(Theta1, Theta2, samples(cv,:));
+	cvPred = predict_whistler(Theta, samples(cv,:));
 	cvTrue = labels(cv);
 	
 	[accuracy, precision, sensitivity, specificity] = net_stats(cvPred, cvTrue);
@@ -204,7 +100,7 @@ function neural_network_training
 	
 	fprintf('Starting test\n');
 
-	testPred = predict_whistler(Theta1, Theta2, samples(test,:));
+	testPred = predict_whistler(Theta, samples(test,:));
 	testTrue = labels(test);
 	
 	[accuracy, precision, sensitivity, specificity] = net_stats(testPred, testTrue);
@@ -214,28 +110,17 @@ function neural_network_training
 	fprintf('Test set sensitivity: %.1f%%\n',sensitivity * 100);
 	fprintf('Test set specificity: %.1f%%\n',specificity * 100);
 
+	statistics{1} = accuracy;
+	statistics{2} = precision;
+	statistics{3} = sensitivity;
+	statistics{4} = specificity;
+
 	% Visualize weights
 	ThetaPrime = Theta{1};
 	display_data(ThetaPrime(1:24, 2:end),nWidth);
 	
-%% Save parameters
-
-	fprintf('Saving parameters\n');
-
 	save('neuralNetDebug','-v7.3');
-
-	save('whistlerNeuralNet','Theta1','Theta2');
 	
 	fprintf('Done!\n');
 	
-end
-
-function spectra = get_spectra(fileName, trigger)
-
-	[~, eField, Fs] = wideband_import(fileName);
-	
-	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
-	
-	spectra = whistler_spectra( timeBase, freqBase, power, trigger );
-
 end
