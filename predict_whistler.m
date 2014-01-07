@@ -28,7 +28,7 @@ function p = predict_whistler(Theta, X)
 			
 		else
 		
-			zPrime = a{i - 1} * Theta{i - 1};
+			zPrime = a{i - 1} * Theta{i - 1}';
 		
 			z{i} = sigmoid(zPrime);
 		
