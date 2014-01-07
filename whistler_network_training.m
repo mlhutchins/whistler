@@ -9,15 +9,13 @@ function [Theta] = whistler_network_training
 
 %% Load Data
 
-	importData = true;
+	importData = false;
 	dataFile = 'trainingData.mat';
 
 	if importData
 		
 		[ images, labels, nFiles ] = load_data;
-		
-		nWidth = size(images,3);
-		
+				
 		save(dataFile,'-v7.3');
 
 	else
@@ -28,7 +26,7 @@ function [Theta] = whistler_network_training
 	
 %% Set whether to re-import the wideband data
 
-	[samples] = format_data(images);
+	[samples, nWidth] = format_data(images);
 
 	% Show first 24 whistlers
 	display_data(samples(1:24,:),nWidth);
@@ -47,6 +45,10 @@ function [Theta] = whistler_network_training
 
 %% Report Statistics
 
+
+	% Visualize weights
+	ThetaPrime = Theta{1};
+	display_data(ThetaPrime(1:24, 2:end),nWidth);
 
 %% Save Parameters
 

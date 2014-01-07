@@ -114,10 +114,6 @@ function [Theta, statistics] = neural_network_training(data,neuralNetwork)
 	statistics{2} = precision;
 	statistics{3} = sensitivity;
 	statistics{4} = specificity;
-
-	% Visualize weights
-	ThetaPrime = Theta{1};
-	display_data(ThetaPrime(1:24, 2:end),nWidth);
 	
 	save('neuralNetDebug','-v7.3');
 	
