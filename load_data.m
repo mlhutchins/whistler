@@ -1,4 +1,4 @@
-function [ images, labels, nFiles ] = load_data
+function [ images, labels ] = load_data
 %LOAD_DATA loads whistler wideband data into an array images
 %
 %	Written by: Michael Hutchins

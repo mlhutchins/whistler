@@ -14,7 +14,7 @@ function [Theta] = whistler_network_training
 
 	if importData
 		
-		[ images, labels, nFiles ] = load_data;
+		[ images, labels ] = load_data;
 				
 		save(dataFile,'-v7.3');
 

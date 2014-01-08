@@ -33,5 +33,6 @@ function [ samples, nWidth ] = format_data( images )
 		
 	nWidth = size(images,3);
 	
+	
 end
 
