@@ -7,23 +7,37 @@ function [ images, labels, nFiles ] = load_data
 
 	fprintf('Gathering file lists\n');
 
+	% Subdirectories
 	trainingDir = 'training/';
 	widebandDir = 'wideband/';
 
-	triggerFile = sprintf('%snewTraining.txt',trainingDir);
+	% File with whistler locations and labels
+	trainingFile = sprintf('%striggerTypes.txt',trainingDir);
 
-	fid = fopen(triggerFile,'r');
-	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g, %g',[8 Inf]);
+	% Load training ist file
+	fid = fopen(trainingFile,'r');
+	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g, %g, %g',[9 Inf]);
 	trainingList = trainingList';
 
+	% Remove "bad" whistlers
+	trainingList(trainingList(:,8) == -1,:) = [];
+	
+	% Get positive trigger times
 	triggersPos = trainingList(:,8);
+	
+	% Set +-5 seconds as negative examples
 	triggersNeg = [triggersPos - 5; triggersPos + 5];
 
+	% Create single trigger list
 	triggers = [triggersPos; triggersNeg];
-	labels = [true(length(triggersPos),1); false(length(triggersNeg),1)];
+	
+	% Get labels for positives and set remaining to 0
+	labels = [trainingList(:,9); zeros(length(triggersNeg),1)];
 
-	% Double for negative examples
-	trainingList = [trainingList; trainingList];
+	% Triple training list for negative examples
+	trainingList = [trainingList(:,1:5);...
+					trainingList(:,1:5);...
+					trainingList(:,1:5)];
 
 	files = cell(size(trainingList,1),1);
 
@@ -55,7 +69,7 @@ function [ images, labels, nFiles ] = load_data
 
 %% Import spectra
 
-	fprintf('Importing %s data from %s\n',triggerFile,widebandDir);
+	fprintf('Importing %s data from %s\n',trainingFile,widebandDir);
 
 	% Import the first to get file sizes
 
