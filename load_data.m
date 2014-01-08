@@ -10,13 +10,13 @@ function [ images, labels, nFiles ] = load_data
 	trainingDir = 'training/';
 	widebandDir = 'wideband/';
 
-	triggerFile = sprintf('%strigger.txt',trainingDir);
+	triggerFile = sprintf('%snewTraining.txt',trainingDir);
 
 	fid = fopen(triggerFile,'r');
-	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g',[7 Inf]);
+	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g, %g',[8 Inf]);
 	trainingList = trainingList';
 
-	triggersPos = trainingList(:,7);
+	triggersPos = trainingList(:,8);
 	triggersNeg = [triggersPos - 5; triggersPos + 5];
 
 	triggers = [triggersPos; triggersNeg];
