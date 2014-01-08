@@ -4,6 +4,8 @@ function [ success ] = unit_test
 %
 %	Written by: Michael Hutchins
 
+	addpath('subfunctions/');
+
 	%% Load OCR data
 	
 	load ocr_data
