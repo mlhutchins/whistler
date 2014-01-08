@@ -4,6 +4,12 @@ function [Theta, statistics] = neural_network_training(samples,labels,neuralNetw
 %
 %	Written by: Michael Hutchins
 
+%% Check for NaN inputs
+
+	if sum(isnan(samples(:))) > 0 || sum(isnan(labels(:))) > 0
+		error('NaN found in input\n')
+	end
+
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
