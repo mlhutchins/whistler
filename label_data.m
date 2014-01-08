@@ -17,7 +17,7 @@
 	
 	[samples, nWidth] = format_data(images);
 	
-	newType = zeros(size(images,1),1);
+	newType = nan(size(images,1),1);
 	
 	startTime = tic;
 	lastTime = tic;
@@ -27,7 +27,6 @@
 	end
 	
 	
-	startIndex = find(newType == 0,1,'first');
 	
 	%% Plot "types"
 	
@@ -50,7 +49,7 @@
 		imagesc(time,freq,newImage)
 		
 		hold on
-		plot([trigger(i),trigger(i)],[1000,10000],'Color','k','LineWidth',2)
+		plot([trigger(i),trigger(i)],[100,10000] - 1,'Color','k','LineWidth',1)
 		hold off
 		
 		set(gca,'YDir','normal');
@@ -67,6 +66,7 @@
 	%%
 	
 	figure
+	startIndex = find(isnan(newType),1,'first');
 
 	for i = startIndex : length(newType);
 				
@@ -84,7 +84,7 @@
 		imagesc(time,freq,newImage)
 		
 		hold on
-		plot([trigger(i),trigger(i)],[1000,10000],'Color','k','LineWidth',2)
+		plot([trigger(i),trigger(i)],[100,100000],'Color','k','LineWidth',2)
 		hold off
 		
 		set(gca,'YDir','normal');
