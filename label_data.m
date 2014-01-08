@@ -30,7 +30,7 @@
 	
 	%% Plot "types"
 	
-	whistlerTypes = [1 2 3 4 5 6 17 31];
+	whistlerTypes = [1 2 3 5 17 31];
 	
 	figure
 	
@@ -68,8 +68,10 @@
 	figure
 	startIndex = find(isnan(newType),1,'first');
 
-	for i = startIndex : length(newType);
-				
+	%for i = startIndex : length(newType);
+			
+	for i = update';
+		
 		if trigger(i) == -1
 			continue
 		end
@@ -97,7 +99,7 @@
 		while true
 		
 			try
-				newType(i) = input(sprintf('%g Sferic Type: ',i));
+				newNewLabel(i) = input(sprintf('%g Sferic Time: ',i));
 				break;
 			catch
 				fprintf('Incorrect input\n')
@@ -113,6 +115,6 @@
 			
 	end
 
-	save('new_type_data','newType','trainingList')
+	save('new_type_data2','newType','trainingList')
 	
 
