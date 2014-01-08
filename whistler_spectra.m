@@ -6,8 +6,8 @@ function [ spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
 
 %% Set start/end time buffers
 
-	startBuffer = 0.1; %seconds
-	endBuffer = 1.9; %seconds
+	startBuffer = 0.5; %seconds
+	endBuffer = 1; %seconds
 
 %% Cut down in frequency and space
 
