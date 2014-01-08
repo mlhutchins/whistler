@@ -23,5 +23,9 @@ function [ success ] = unit_test
 	
 	[Theta, statistics] = neural_network_training(samples,labels,neuralNetwork);
 	
+	%%
+	
+	success = true;
+	
 end
 

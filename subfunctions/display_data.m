@@ -6,6 +6,8 @@ function [h, display_array] = display_data(X, example_width)
 %
 %	Code adapted from: Andrew Ng's Machine Learning Course
 
+figure;
+
 % Set example_width automatically if not passed in
 if ~exist('example_width', 'var') || isempty(example_width) 
 	example_width = round(sqrt(size(X, 2)));
