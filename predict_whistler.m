@@ -44,9 +44,5 @@ function p = predict_whistler(Theta, X)
 	h = a{end};
 
 	[~, p] = max(h, [], 2);
-	
-%% Set to positive/negetive index
-
-	p = logical(p - 2);
 
 end
