@@ -5,7 +5,7 @@
 	
 	trainingDir = 'training/';
 
-	triggerFile = sprintf('%snewTrigger.txt',trainingDir);
+	triggerFile = sprintf('%snewTraining.txt',trainingDir);
 
 	fid = fopen(triggerFile,'r');
 	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g, %g',[8 Inf]);
@@ -33,8 +33,7 @@
 	
 	figure
 
-	%for i = startIndex : length(newLabel);
-	for i = reLabel'
+	for i = startIndex : length(newType);
 				
 		if trigger(i) == -1
 			continue
@@ -59,7 +58,7 @@
 		while true
 		
 			try
-				newType(i) = input(sprintf('%g Sferic Start Time: ',i));
+				newType(i) = input(sprintf('%g Sferic Type: ',i));
 				break;
 			catch
 				fprintf('Incorrect input\n')
