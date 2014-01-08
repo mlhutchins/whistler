@@ -120,9 +120,7 @@ function [Theta, statistics] = neural_network_training(samples,labels,neuralNetw
 	statistics{2} = precision;
 	statistics{3} = sensitivity;
 	statistics{4} = specificity;
-	
-	save('neuralNetDebug','-v7.3');
-	
+		
 	fprintf('Done!\n');
 	
 end
