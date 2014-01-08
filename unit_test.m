@@ -12,9 +12,7 @@ function [ success ] = unit_test
 
 	samples = reshape(X,5000,20,20);
 	labels = y;
-	
-	data
-	
+		
 	clear X y
 	
 	%% Initialize neural network
