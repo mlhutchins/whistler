@@ -29,10 +29,11 @@ function [Theta] = whistler_network_training
 	
 %% Remove NaN entries
 
-	nanEntry = sum(sum(isnan(images),3),2) > 0;
-	
-	images(nanEntry,:,:) = [];
-	labels(nanEntry) = [];
+	badEntry = sum(sum(isnan(images),3),2) > 0 | sum(sum(isinf(images),3),2) > 0 |...
+			   sum(isnan(labels)) > 0 | sum(isnan(labels)) > 0 ;
+		   
+	images(badEntry,:,:) = [];
+	labels(badEntry) = [];
 	
 %% Set whether to re-import the wideband data
 

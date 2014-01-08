@@ -131,7 +131,7 @@ function [J, grad] = nn_cost(nnParams, ...
 		grad = [grad ; ThetaGradPrime(:)];
 		
 	end
-	
+		
 end
 
 

@@ -10,6 +10,10 @@ function [Theta, statistics] = neural_network_training(samples,labels,neuralNetw
 		error('NaN found in input\n')
 	end
 
+	if sum(isinf(samples(:))) > 0 || sum(isinf(labels(:))) > 0
+		error('Inf found in input\n')
+	end
+	
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
