@@ -1,14 +1,8 @@
-function [Theta, statistics] = neural_network_training(data,neuralNetwork)
+function [Theta, statistics] = neural_network_training(samples,labels,neuralNetwork)
 %NEURAL_NETWORK_TRAINING(data, neuralNetwork) trains the neuralNetwork with
 %	the data loaded into sampels with cross-validation and statistics testing
 %
 %	Written by: Michael Hutchins
-
-%% Exract sample data
-
-	samples = data.samples;
-	labels = data.labels;
-	nFiles = data.nFiles;
 
 %% Set random seed
 	
@@ -20,6 +14,8 @@ function [Theta, statistics] = neural_network_training(data,neuralNetwork)
 	
 	fprintf('Selecting Training Set\n');
 
+	nFiles = size(samples,1);
+	
 	train = randsample(nFiles,round(0.8 * nFiles)); %Train with 80% of the data
 	X = samples(train,:);
 	y = labels(train,:);

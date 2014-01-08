@@ -31,17 +31,13 @@ function [Theta] = whistler_network_training
 	% Show first 24 whistlers
 	display_data(samples(1:24,:),nWidth);
 
-	data.samples = samples;
-	data.labels = labels;
-	data.nFiles = nFiles;
-
 %% Format Neural Network
 
 	neuralNetwork = neural_network_init();
 
 %% Train Neural Network
 
-	[Theta, statistics] = neural_network_training(data,neuralNetwork);
+	[Theta, statistics] = neural_network_training(samples,labels,neuralNetwork);
 
 %% Report Statistics
 
