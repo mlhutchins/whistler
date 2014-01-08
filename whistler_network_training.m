@@ -45,7 +45,6 @@ function [Theta] = whistler_network_training
 
 %% Report Statistics
 
-
 	% Visualize weights
 	ThetaPrime = Theta{1};
 	display_data(ThetaPrime(1:24, 2:end),nWidth);

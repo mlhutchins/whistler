@@ -70,7 +70,7 @@ function [Theta, statistics] = neural_network_training(data,neuralNetwork)
 
 	Theta = theta_unwrap(nnParams, inputLayerSize, hiddenLayerSize, nLabels);
 	
-	trainPred = predict_whistler(Theta, X);
+	trainPred = predict_whistler(Theta, X) - 1;
 	trainTrue = y;
 
 	[accuracy, precision, sensitivity, specificity] = net_stats(trainPred, trainTrue);
@@ -86,7 +86,7 @@ function [Theta, statistics] = neural_network_training(data,neuralNetwork)
 	
 %% Pick best parameters
 
-	cvPred = predict_whistler(Theta, samples(cv,:));
+	cvPred = predict_whistler(Theta, samples(cv,:)) - 1;
 	cvTrue = labels(cv);
 	
 	[accuracy, precision, sensitivity, specificity] = net_stats(cvPred, cvTrue);
@@ -100,7 +100,7 @@ function [Theta, statistics] = neural_network_training(data,neuralNetwork)
 	
 	fprintf('Starting test\n');
 
-	testPred = predict_whistler(Theta, samples(test,:));
+	testPred = predict_whistler(Theta, samples(test,:)) - 1;
 	testTrue = labels(test);
 	
 	[accuracy, precision, sensitivity, specificity] = net_stats(testPred, testTrue);
