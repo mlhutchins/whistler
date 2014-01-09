@@ -14,6 +14,6 @@ function [ probability ] = neural_network( sampleSpectra )
 	
 	%% Run neural network classification
 	
-	probability = predict_whistler(Theta1, Theta2, spectra);
+	probability = predict_whistler(Theta, spectra);
 
 end
