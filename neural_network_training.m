@@ -1,4 +1,4 @@
-function [Theta, statistics] = neural_network_training(samples,labels,neuralNetwork)
+function [Theta, statistics, cost] = neural_network_training(samples,labels,neuralNetwork)
 %NEURAL_NETWORK_TRAINING(data, neuralNetwork) trains the neuralNetwork with
 %	the data loaded into sampels with cross-validation and statistics testing
 %

@@ -49,7 +49,7 @@ function [Theta] = whistler_network_training
 
 %% Train Neural Network
 
-	[Theta, statistics] = neural_network_training(samples,labels,neuralNetwork);
+	[Theta, statistics, cost] = neural_network_training(samples,labels,neuralNetwork);
 
 %% Report Statistics
 
@@ -57,6 +57,11 @@ function [Theta] = whistler_network_training
 	ThetaPrime = Theta{1};
 	display_data(ThetaPrime(1:24, 2:end),nWidth);
 
+	figure
+	plot(cost)
+	ylabel('Cost')
+	xlabel('Iterations')
+	
 %% Save Parameters
 
 	save('whistlerNeuralNet','Theta', 'statistics');
