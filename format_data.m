@@ -25,19 +25,14 @@ function [ samples, nWidth ] = format_data( images )
 		spectra(spectra < minPower) = minPower;
 		spectra(spectra > maxPower) = maxPower;
 
-		spectraRange = (range(spectra(:)) / 2);
-		
-		if spectraRange == 0
-			spectra(:) = 0;
-		else
-			spectra = (spectra - minPower / 2) / spectraRange;
-		end
-		
+		spectra = spectra > prctile(spectra(:),85);
+	
 		samples(i,:) = spectra(:)';
 		
 	end
 		
 	nWidth = size(images,3);
+
 	
 	
 end
