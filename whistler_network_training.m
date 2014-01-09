@@ -45,7 +45,7 @@ function [Theta] = whistler_network_training
 %% Format Neural Network
 
 	neuralNetwork = neural_network_init();
-	% hiddenLayerSize, lambda, maxIter
+	% hiddenLayerSize, lambda, maxIter, split
 
 %% Train Neural Network
 

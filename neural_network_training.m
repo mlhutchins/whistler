@@ -24,16 +24,18 @@ function [Theta, statistics, cost] = neural_network_training(samples,labels,neur
 	
 	fprintf('Selecting Training Set\n');
 
-	nFiles = size(samples,1);
+	trainSplit = neuralNetwork.trainSplit;
+	trainSplit = round(trainSplit * size(samples,1));
 	
-	train = randsample(nFiles,round(0.8 * nFiles)); %Train with 80% of the data
+	remaining = 1 : size(samples,1);
+
+	train = randsample(length(remaining),trainSplit(1)); %Train with 80% of the data
 	X = samples(train,:);
 	y = labels(train,:);
 	
-	remaining = 1 : nFiles;
 	remaining(train) = [];
-	
-	sampling = randsample(length(remaining), floor(length(remaining) / 2));
+		
+	sampling = randsample(length(remaining), trainSplit(2));
 	cv = remaining(sampling); % Index of values for cross validation (10%)
 	
 	remaining(sampling) = [];
