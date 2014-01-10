@@ -68,27 +68,49 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	end
 	
 	cvStatistics = cell(size(cvParameters,1),1);
-
-	[samples, nWidth] = format_data(images);
-
-%% Adjust and Initialize Neural Network
-
-	neuralNetwork = neural_network_init();
-	% hiddenLayerSize, lambda, maxIter
-
-%% Train Initial Neural Network
-
-	[Theta, statistics, cost] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
 	
-%% Get cross validation statistics
+%% Loop through parameters
 
-	cvPred = predict(Theta, samples(cv,:)) - 1;
-	cvTrue = labels(cv);
+	if parallel_check
+		parallel_start
+	end
 	
-	[accuracy, precision, sensitivity, specificity] = net_stats(cvPred, cvTrue);
-	
-	cvStatistics{i,j,k} = [accuracy, precision, sensitivity, specificity];
+	parfor i = 1 : size(cvStatistics,1)
+		
+		%% Extract parameters
+		
+		lambda = cvParameters{i,1};
+		networkShape = cvParameters{i,2};
+		threshold = cvParameters{i,3};
+		frequency = cvParameters{i,4};
+		
 
+		%% Adjust data format
+
+		[samples, nWidth] = format_data( images, threshold, frequency );
+
+		%% Adjust and Initialize Neural Network
+
+		neuralNetwork = neural_network_init(networkShape,lambda);
+		% hiddenLayerSize, lambda, maxIter
+
+		%% Train Initial Neural Network
+
+		[Theta, ~, ~] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
+
+		%% Get cross validation statistics
+
+		cvPred = predict(Theta, samples(cv,:)) - 1;
+		cvTrue = labels(cv);
+
+		[accuracy, precision, sensitivity, specificity] = net_stats(cvPred, cvTrue);
+
+		cvStatistics{i} = [accuracy, precision, sensitivity, specificity];
+
+	end
+	
+	cvStatistics(:,2:5) = cvParameters;
+	
 %% Get best performance
 
 	% Code here to select best
