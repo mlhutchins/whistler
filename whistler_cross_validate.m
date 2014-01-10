@@ -162,15 +162,20 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 %% Report test results for best CV data
 	
+	lambda = cvStatistics{best,2};
+	networkShape = cvStatistics{best,3};
+	threshold = cvStatistics{best,4};
+	frequency = cvStatistics{best,5};
+	
 	% Format to best
-	[samples, nWidth] = format_data(images);
+	[samples, nWidth] = format_data( images, threshold, frequency );
 
 	% Show first 24 whistlers
 	display_data(samples(1:24,:),nWidth);
 	
 	% Initialize Neural Network to best
-	neuralNetwork = neural_network_init();
-
+	neuralNetwork = neural_network_init(networkShape,lambda);
+	
 	% Train
 	[Theta, statistics, cost] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
 
