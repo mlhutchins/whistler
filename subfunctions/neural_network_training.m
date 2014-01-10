@@ -14,33 +14,6 @@ function [Theta, statistics, cost] = neural_network_training(samples,labels,neur
 		error('Inf found in input\n')
 	end
 	
-%% Set random seed
-	
-	fprintf('Setting Random Seed\n');
-
-	rng(1);
-	
-%% Split into traing / CV / test
-	
-	fprintf('Selecting Training Set\n');
-
-	trainSplit = neuralNetwork.trainSplit;
-	trainSplit = round(trainSplit * size(samples,1));
-	
-	remaining = 1 : size(samples,1);
-
-	train = randsample(length(remaining),trainSplit(1)); %Train with 80% of the data
-	X = samples(train,:);
-	y = labels(train,:);
-	
-	remaining(train) = [];
-		
-	sampling = randsample(length(remaining), trainSplit(2));
-	cv = remaining(sampling); % Index of values for cross validation (10%)
-	
-	remaining(sampling) = [];
-	test = remaining; %Test with last 10% of the data
-
 	
 %% Initialize variables and parameters
 
