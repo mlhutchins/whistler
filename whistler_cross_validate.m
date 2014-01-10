@@ -111,6 +111,8 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	cvStatistics(:,2:5) = cvParameters;
 	
+	save('cvDebug','-v7.3');
+	
 %% Get best performance
 
 	% Code here to select best
@@ -118,6 +120,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	iBest = 1;
 	jBest = 1;
 	kBest = 1;
+	nBest = 1;
 	
 %% Report test results for best CV data
 	
