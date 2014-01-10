@@ -1,16 +1,16 @@
-function [Theta, statistics, cost] = neural_network_training(samples,labels,neuralNetwork)
+function [Theta, statistics, cost] = neural_network_training(X,y,neuralNetwork)
 %NEURAL_NETWORK_TRAINING(data, neuralNetwork) trains the neuralNetwork with
-%	the data loaded into sampels with cross-validation and statistics testing
+%	the data loaded into samples and initialized by neural_network_init()
 %
 %	Written by: Michael Hutchins
 
 %% Check for NaN inputs
 
-	if sum(isnan(samples(:))) > 0 || sum(isnan(labels(:))) > 0
+	if sum(isnan(X(:))) > 0 || sum(isnan(y(:))) > 0
 		error('NaN found in input\n')
 	end
 
-	if sum(isinf(samples(:))) > 0 || sum(isinf(labels(:))) > 0
+	if sum(isinf(X(:))) > 0 || sum(isinf(y(:))) > 0
 		error('Inf found in input\n')
 	end
 	
@@ -24,7 +24,7 @@ function [Theta, statistics, cost] = neural_network_training(samples,labels,neur
 
 	hiddenLayerSize = neuralNetwork.hiddenLayerSize;
 
-	nLabels = length(unique(labels));
+	nLabels = length(unique(y));
 	
 	% Random initialize neural network weights
 	
