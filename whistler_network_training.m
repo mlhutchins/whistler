@@ -52,7 +52,7 @@ function [Theta] = whistler_network_training
 	
 %% Save Parameters
 
-	save('whistlerNeuralNet','Theta', 'statistics');
+	save('whistlerNeuralNet','Theta', 'statistics','cost','validation');
 	
 	fprintf('Saving parameters\n');
 
