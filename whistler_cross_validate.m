@@ -31,7 +31,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 %% Cross validate parameters
 	
-	fprintf('Cross Validating\n');
+	fprintf('Setting Cross Validation Parameters\n');
 	
 	% Cross validate over lambda, network shape / size (init)
 	%					  threshold, frequency range (format)
@@ -79,6 +79,9 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 %% Loop through parameters
 
+	fprintf('Starting Cross Validation\n');
+	
+	parTic = tic;
 	
 	parfor i = 1 : size(cvStatistics,1)
 		
@@ -112,11 +115,15 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 		cvStatistics{i} = [accuracy, precision, sensitivity, specificity];
 
+		%% Print status
+		
+		fprintf('%g / %g Done - %.2f seconds elapsed\n',i,size(cvParameters,1),toc(parTic));
+		
 	end
+		
+	save('cvDebug','-v7.3');
 	
 	cvStatistics(:,2:5) = cvParameters;
-	
-	save('cvDebug','-v7.3');
 	
 %% Get best performance
 

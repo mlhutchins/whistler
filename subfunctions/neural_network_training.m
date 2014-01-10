@@ -17,8 +17,6 @@ function [Theta, statistics, cost] = neural_network_training(X,y,neuralNetwork)
 	
 %% Initialize variables and parameters
 
-	fprintf('Initializing Neural Network\n');
-
 	lambda = neuralNetwork.lambda; % Initial Regularization parameter
 	inputLayerSize = size(X,2);
 
@@ -32,8 +30,6 @@ function [Theta, statistics, cost] = neural_network_training(X,y,neuralNetwork)
 
 %% Train neural network
 	
-	fprintf('Training Neural Network\n');
-
 	% Optimization code options
 	options = optimset('MaxIter', neuralNetwork.maxIter);
 
