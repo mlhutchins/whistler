@@ -26,14 +26,48 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	fprintf('Cross Validating\n');
 	
 	% Cross validate over lambda, network shape / size (init)
-	%					  threshold, frequency range, min/max (format)
+	%					  threshold, frequency range (format)
 	%		
-	i = 1;
-	j = 1;
-	k = 1;
-	cvStatistics = cell(i,j,k);
 	
-%% Adjust data format
+	% Lamdba (regularization values)
+	
+	lambda = {0, 0.03, 0.1, 0.3, 1, 3};
+	networkShape = {[25],...
+					[100, 25],...
+					[100, 50, 25],...
+					[200, 50],...
+					[200, 75, 25],...
+					[400],...
+					[400, 200, 50]};
+				
+	threshold = {55, 65, 76, 85, 95};
+	
+	frequency = {[4 4.5],...
+				 [3 4.5],...
+				 [4 5.5],...
+				 [2 6.5],...
+				 [1 8],...
+				 [1 10]};
+	
+	% Permute into parameter cell array
+	cvParameters = cell(length(lambda) * length(networkShape) *...
+						length(threshold) * length(frequency),5);
+	index = 1;
+	for i = 1 : length(lambda)
+		for j = 1 : length(networkShape)
+			for k = 1 : length(threshold)
+				for n = 1 : length(frequency)
+					cvParameters(index,1) = lambda(i);
+					cvParameters(index,2) = networkShape(j);
+					cvParameters(index,3) = threshold(k);
+					cvParameters(index,4) = frequency(n);
+					index = index + 1;
+				end
+			end
+		end
+	end
+	
+	cvStatistics = cell(size(cvParameters,1),1);
 
 	[samples, nWidth] = format_data(images);
 
