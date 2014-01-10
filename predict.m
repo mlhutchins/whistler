@@ -1,6 +1,6 @@
-function p = predict_whistler(Theta, X)
+function p = predict(Theta, X)
 %PREDICT Predict the label of an input given a trained neural network
-%   p = PREDICT(Theta1, Theta2, X) outputs the most likely label of X given the
+%   p = PREDICT(Theta, X) outputs the most likely label of X given the
 %   trained weights of a neural network (Theta)
 %
 %	Written by: Michael Hutchins

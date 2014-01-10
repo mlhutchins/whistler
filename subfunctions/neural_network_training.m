@@ -78,7 +78,7 @@ function [Theta, statistics, cost] = neural_network_training(samples,labels,neur
 
 	Theta = theta_unwrap(nnParams, inputLayerSize, hiddenLayerSize, nLabels);
 	
-	trainPred = predict_whistler(Theta, X) - 1;
+	trainPred = predict(Theta, X) - 1;
 	trainTrue = y;
 
 	[accuracy, precision, sensitivity, specificity] = net_stats(trainPred, trainTrue);
