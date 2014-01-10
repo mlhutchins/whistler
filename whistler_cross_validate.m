@@ -59,7 +59,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	% Permute into parameter cell array
 	cvParameters = cell(length(lambda) * length(networkShape) *...
-						length(threshold) * length(frequency),5);
+						length(threshold) * length(frequency),4);
 	index = 1;
 	for i = 1 : length(lambda)
 		for j = 1 : length(networkShape)
