@@ -120,10 +120,10 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		fprintf('%g / %g Done - %.2f seconds elapsed\n',i,size(cvParameters,1),toc(parTic));
 		
 	end
-		
-	save('cvDebug','-v7.3');
-	
+
 	cvStatistics(:,2:5) = cvParameters;
+
+	save('cvDebug','-v7.3');	
 	
 %% Get best performance
 
