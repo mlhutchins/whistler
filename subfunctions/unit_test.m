@@ -1,4 +1,4 @@
-function [ success ] = unit_test
+function unit_test
 % UNIT_TEST runs the neural network code with the basic OCR dataset to check
 %	functionality of code
 %
@@ -9,25 +9,26 @@ function [ success ] = unit_test
 	%% Load OCR data
 	
 	load ocr_data
-	
-	%% Format into a stack of images
-
-	samples = reshape(X,5000,20,20);
-	labels = y;
 		
-	clear X y
-	
+	display_data(X(randsample(size(X,1),100),:),20);
+
 	%% Initialize neural network
 	
 	neuralNetwork = neural_network_init();
 	
 	%% Train neural network
 	
-	[Theta, statistics] = neural_network_training(samples,labels,neuralNetwork);
+	[Theta, statistics, cost] = neural_network_training(X,y,neuralNetwork);
 	
-	%%
-	
-	success = true;
-	
+	%% Display a few of the final Thetas
+
+	ThetaPrime = Theta{1};
+	display_data(ThetaPrime(1:24,2:end),20);
+
+	figure
+	plot(cost)
+	xlabel('Iterations')
+	ylabel('Cost')
+		
 end
 
