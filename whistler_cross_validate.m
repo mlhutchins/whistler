@@ -127,12 +127,30 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 %% Get best performance
 
-	% Code here to select best
+	% Compile statistics into array
 	
-	iBest = 1;
-	jBest = 1;
-	kBest = 1;
-	nBest = 1;
+	statistics = zeros(size(cvStatistics,1),4);
+	
+	for i = 1 : size(cvStatistics,1)
+		statistics(i,:) = cvStatistics{i};
+	end
+
+	threshold = 99;
+	best = [];
+	
+	while isempty(best)
+
+		cutoff = prctile(statistics,threshold);
+
+		top = bsxfun(@ge,statistics,cutoff);
+
+		best = find(sum(top,2) == 4);
+	
+		secondBest = find(sum(top,2) >= 3);
+		
+		threshold = threshold - 1;
+
+	end
 	
 %% Report test results for best CV data
 	
