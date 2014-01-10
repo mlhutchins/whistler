@@ -6,12 +6,12 @@ function [ samples, nWidth ] = format_data( images, threshold, freqThreshold )
 	switch nargin
 		case 1
 			threshold = 85;
-			freqThreshold = [4000, 4500];
+			freqThreshold = [4, 4.5]; %kHz
 	end
 
 	frequency = linspace(1000,10000,size(images,2));
 
-	images = images(:,frequency > freqThreshold(1) & frequency < freqThreshold(2),:);
+	images = images(:,frequency > freqThreshold(1) * 1000 & frequency < freqThreshold(2) * 1000,:);
 	
 	samples = zeros(size(images,1), size(images,2) * size(images,3));
 
