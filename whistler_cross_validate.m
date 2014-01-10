@@ -1,8 +1,16 @@
 function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( images, labels )
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%WHISTLER_CROSS_VALIDATE(images, labels) trains a neural network on the
+%	images data and returns the best neural network parameters after cross
+%	validating
+%
+%	Written by: Michael Hutchins
 
+%% Start parallel processing
 
+	if parallel_check
+		parallel_start
+	end
+	
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
@@ -71,9 +79,6 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 %% Loop through parameters
 
-	if parallel_check
-		parallel_start
-	end
 	
 	parfor i = 1 : size(cvStatistics,1)
 		
