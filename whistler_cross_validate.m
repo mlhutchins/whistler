@@ -151,6 +151,14 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		threshold = threshold - 1;
 
 	end
+
+	fprintf('\n')
+	fprintf('Best parameter selection:\n')
+	print_parameters(cvStatistics(best,2:5));
+	
+	fprintf('\n')
+	fprintf('Second best parameter selections:\n')
+	print_parameters(cvStatistics(secondBest,2:5));
 	
 %% Report test results for best CV data
 	
@@ -185,3 +193,33 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 end
 
+function print_parameters(parameters)
+
+	fprintf('Lambda\t| Network\t| Threshold\t| Frequency\n');
+
+	for i = 1 : size(parameters,1);
+		
+		fprintf('%g\t| ',parameters{i,1});
+		
+		networkSize = parameters{i,2};
+		
+		for j = 1 : length(networkSize);
+			if j == length(networkSize)
+				fprintf('%g',networkSize(j));
+			else
+				fprintf('%g, ',networkSize(j));
+			end
+		end
+		
+		if length(networkSize) == 1
+			fprintf('\t')
+		end
+
+		fprintf('\t| ')
+		fprintf('%g\t\t| ',parameters{i,3});
+
+		fprintf('[%g, %g] ',parameters{i,4});
+		fprintf('\n');
+	end
+	
+end
