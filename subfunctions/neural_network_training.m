@@ -55,47 +55,10 @@ function [Theta, statistics, cost] = neural_network_training(X,y,neuralNetwork)
 	trainTrue = y;
 
 	[accuracy, precision, sensitivity, specificity] = net_stats(trainPred, trainTrue);
-	
-	fprintf('Training set accuracy: %.1f%%\n',accuracy * 100);
-	fprintf('Training set precision: %.1f%%\n',precision * 100);
-	fprintf('Training set sensitivity: %.1f%%\n',sensitivity * 100);
-	fprintf('Training set specificity: %.1f%%\n',specificity * 100);
-
-%% Cross validate parameters
-	
-	fprintf('Cross Validating\n');
-	
-%% Pick best parameters
-
-	cvPred = predict_whistler(Theta, samples(cv,:)) - 1;
-	cvTrue = labels(cv);
-	
-	[accuracy, precision, sensitivity, specificity] = net_stats(cvPred, cvTrue);
-	
-	fprintf('Cross Validation set accuracy: %.1f%%\n',accuracy * 100);
-	fprintf('Cross Validation set precision: %.1f%%\n',precision * 100);
-	fprintf('Cross Validation set sensitivity: %.1f%%\n',sensitivity * 100);
-	fprintf('Cross Validation set specificity: %.1f%%\n',specificity * 100);
-	
-%% Report test results
-	
-	fprintf('Starting test\n');
-
-	testPred = predict_whistler(Theta, samples(test,:)) - 1;
-	testTrue = labels(test);
-	
-	[accuracy, precision, sensitivity, specificity] = net_stats(testPred, testTrue);
-	
-	fprintf('Test set accuracy: %.1f%%\n',accuracy * 100);
-	fprintf('Test set precision: %.1f%%\n',precision * 100);
-	fprintf('Test set sensitivity: %.1f%%\n',sensitivity * 100);
-	fprintf('Test set specificity: %.1f%%\n',specificity * 100);
 
 	statistics{1} = accuracy;
 	statistics{2} = precision;
 	statistics{3} = sensitivity;
 	statistics{4} = specificity;
-		
-	fprintf('Done!\n');
-	
+			
 end
