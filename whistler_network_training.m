@@ -35,21 +35,9 @@ function [Theta] = whistler_network_training
 	images(badEntry,:,:) = [];
 	labels(badEntry) = [];
 	
-%% Set whether to re-import the wideband data
+%% Train and cross validate the neural network
 
-	[samples, nWidth] = format_data(images);
-
-	% Show first 24 whistlers
-	display_data(samples(1:24,:),nWidth);
-
-%% Format Neural Network
-
-	neuralNetwork = neural_network_init();
-	% hiddenLayerSize, lambda, maxIter, split
-
-%% Train Neural Network
-
-	[Theta, statistics, cost] = neural_network_training(samples,labels,neuralNetwork);
+	[ Theta, statistics, cost, validation ] = whistler_cross_validate( images, labels );
 
 %% Report Statistics
 
