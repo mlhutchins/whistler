@@ -1,12 +1,8 @@
-function [ location, spectra, freqBase, timeBase ] = sliding_window( eField, Fs, cutoff )
-%SLIDING_WINDOW searches a wideband file for whistlers using a neural network
-%	classifier
+function [ location, spectra] = sliding_window( time, frequency, power )
+%SLIDING_WINDOW(time, frequency, power) searches a spectogram POWER for 
+%	whistlers using a neural network classifier and a sliding window search
 %
 %	Written by: Michael Hutchins
-
-	%% FFT wideband data
-	
-	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
 
 	%% Sliding window parameters
 	
@@ -14,31 +10,40 @@ function [ location, spectra, freqBase, timeBase ] = sliding_window( eField, Fs,
 
 	windows = 0 : stepSize : 60;
 	
-	probability = zeros(length(windows),1);
+	found = false(length(windows),1);
 	
 	spectra = cell(length(windows),1);
+	
+	%% Load neural network parameters
+	
+	network = load('whistlerNeuralNet');
+	
+	Theta = network.Theta;
 	
 	%% Chech each window
 	
 	for i = 1 : length(windows);
 
-		%% Check each window
+		%% Window data
 		
-		[ spec ] = whistler_spectra( timeBase, freqBase, power, windows(i) );
-
-		spectra{i} = spec;
+		[ windowSpectra ] = whistler_spectra( time, frequency, power, windows(i) );
+		
+		spectra{i} = windowSpectra;
 		
 		%% Find local probability maxima above threshold
 
-		probability(i) = predict_whistler(Theta1, Theta2, spec(:)');
+		[ sample, ~ ] = format_data( windowSpectra );
+		
+		found(i) = predict(Theta, sample(:)');
 
 	end
 	
 	%% Count and locate whistlers
 	
-	[location, idx] = findpeaks(probability,'minpeakheights',cutoff,...
-									 'minpeakdistance',3);
+	[~, idx] = findpeaks(double(found),'minpeakdistance',2);
 	
 	spectra = spectra(idx);
+	
+	location = time(idx);
 								 
 end

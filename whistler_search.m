@@ -38,7 +38,7 @@ function whistler_search( directory )
 		
 		%% Sliding window search for whistlers
 		
-		[ location, spectra] = sliding_window( time, frequency, power );
+		[ location, spectra ] = sliding_window( time, frequency, power );
 
 		if isempty(location)
 			continue
