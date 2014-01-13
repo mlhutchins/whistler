@@ -3,12 +3,26 @@ function [ samples, nWidth ] = format_data( images, threshold, freqThreshold )
 %
 %	Written by: Michael Hutchins
 
+
+	%% Format input
+
 	switch nargin
 		case 1
 			threshold = 85;
 			freqThreshold = [4, 4.5]; %kHz
 	end
-
+	
+	if length(size(images)) == 2
+		
+		newImage = zeros(1,size(images,1),size(images,2));
+		
+		newImage(1,:,:) = images;
+		
+		images = newImage;
+			
+	end
+	
+	
 	frequency = linspace(1000,10000,size(images,2));
 
 	images = images(:,frequency > freqThreshold(1) * 1000 & frequency < freqThreshold(2) * 1000,:);
