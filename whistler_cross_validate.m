@@ -183,7 +183,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	display_data(samples(1:24,:),nWidth);
 	
 	% Initialize Neural Network to best
-	neuralNetwork = neural_network_init(networkShape,lambda);
+	neuralNetwork = neural_network_init(networkShape,lambda,200);
 	
 	% Train
 	[Theta, statistics, cost] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
