@@ -4,14 +4,25 @@ function whistler_search( directory )
 %
 %	Written by: Michael Hutchins
 
+	%% Format input
+	
+	if ~strcmp(directory(end),'/');
+		directory = sprintf('%s/',directory);
+	end
+
 	%% Get file list
 	
 	fileList = dir(directory);
 	index = 1;
+	files{length(fileList),1} = [];
 	
 	for i = 1 : length(fileList);
 		
 		entry = fileList(i).name;
+		
+		if length(entry) < 10
+			continue
+		end
 		
 		if strcmp(entry(1:2),'WB') && strcmp(entry(end-2 : end),'dat')
 			files{index} = fileList(i).name;
@@ -19,6 +30,8 @@ function whistler_search( directory )
 		end
 		
 	end
+	
+	files = files(1 : index - 1);
 	
 	%% Initalize parameters
 	
@@ -31,7 +44,7 @@ function whistler_search( directory )
 		%% Import and FFT wideband file
 
 		fileName = sprintf('%s%s',directory,files{i});
-
+		
 		[~, eField, Fs] = wideband_import(fileName);
 
 		[ time, frequency, power ] = wideband_fft( eField, Fs );
