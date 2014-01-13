@@ -22,26 +22,31 @@ function whistler_search( directory )
 	
 	%% Initalize parameters
 	
-	cutoff = 0.5;
 	reportFile = fopen('whistlers.txt','a+');
 	
 	%% Process each file
 	
 	for i = 1 : length(files);
 
-		%% Use sliding window search on each file
+		%% Import and FFT wideband file
 
 		fileName = sprintf('%s%s',directory,files{i});
 
 		[~, eField, Fs] = wideband_import(fileName);
 
-		[ location, spectra, fRange, tw ] = sliding_window( eField, Fs, cutoff );
+		[ time, frequency, power ] = wideband_fft( eField, Fs );
+		
+		%% Sliding window search for whistlers
+		
+		[ location, spectra] = sliding_window( time, frequency, power );
 
 		if isempty(location)
 			continue
 		end
 
-		%% Print times and dispersions to file
+		%% Process each whistler
+		
+		% Get start date/time of file
 		
 		fileTime = sscanf(files{i},'WB%04g%02g%02g%02g%02g%02g.dat');
 		
@@ -55,10 +60,13 @@ function whistler_search( directory )
 
 			whistler_image(spectra{j}, chirp, D, fRange, tw, fileTime, location(j));
 			
-			%% Write times and dispersions to file
+			%% Write times and dispersions to file and console
 			
-			fprintf(reportFile, '%04g/%02g/%02g %02g:%02g:%02g, D = %.2f\n',...
+			dispersionText = sprintf('%04g/%02g/%02g %02g:%02g:%02g, D = %.2f\n',...
 					 fileTime(1:5), location(j), D);
+			
+			fprintf(reportFile, dispersionText);
+			fprintf(dispersionText);
 				 
 		end
 
