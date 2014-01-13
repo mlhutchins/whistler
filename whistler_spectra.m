@@ -30,11 +30,11 @@ function [ spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
 		
 		if (timeBase(end) < (startTime + endBuffer));
 		
-			spectra = [padding, spectra];
+			spectra = [ spectra, padding ];
 		
 		else 
 		
-			spectra = [spectra, padding];
+			spectra = [ padding, spectra ];
 		end
 		
 	elseif actualSize > expectedSize
