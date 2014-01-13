@@ -53,7 +53,7 @@ function whistler_search( directory )
 		
 		%% Sliding window search for whistlers
 		
-		[ location, spectra ] = sliding_window( time, frequency, power );
+		[ location, spectra, spectraBase ] = sliding_window( time, frequency, power );
 
 		if isempty(location)
 			fprintf('Processed %s : %.2f Seconds Elapsed\n',fileName,toc);
@@ -70,11 +70,15 @@ function whistler_search( directory )
 				
 			%% Get best fit dispersion for each whistler
 
-			[D, ~, chirp] = dispersion_check(spectra{j}, fRange, tw);
+			spec = spectra{j};
+			tw = spectraBase{j,1};
+			fw = spectraBase{j,2};
+						
+			[D, ~, chirp] = dispersion_check(spec, fw, tw);
 			
 			%% Save spectrogram .png images and wideband snippets
 
-			whistler_image(spectra{j}, chirp, D, fRange, tw, fileTime, location(j));
+			whistler_image(spec, chirp, D, fw, tw, fileTime, location(j), '');
 			
 			%% Write times and dispersions to file and console
 			
@@ -94,7 +98,7 @@ function whistler_search( directory )
 	
 end
 
-function whistler_image(spectrogram, chirp, D, fileTime, location, directory)
+function whistler_image(spectrogram, chirp, D, frequency, time, fileTime, location, directory)
 %WHISTLER_IMAGE Creates a .png file with the whistler spectra and
 %	dechirped spectra
 
@@ -103,15 +107,25 @@ function whistler_image(spectrogram, chirp, D, fileTime, location, directory)
 				 
 	figure
 	subplot(1,2,1)
-	imagesc(spectrogram)
+	imagesc(time, frequency, spectrogram)
 	title(titleText);
+	caxis([-40 0])
+	set(gca,'TickDir','Out')
+	set(gca,'YDir','normal');
+	xlabel('Time (s)')
+	ylabel('Frequency (Hz)')
 	
 	subplot(1,2,2)
-	imagesc(chirp)
+	imagesc(time, frequency,chirp)
+	caxis([-40 0])
+	set(gca,'TickDir','Out')
+	set(gca,'YDir','normal');
+	xlabel('Time (s)')
+	ylabel('Frequency (Hz)')
 	
 	fileName = sprintf('%swhistler%04g%02g%02g%02g%02g%02g_%02g.png',...
 						directory, fileTime, floor(location));
 					
-	saveas(gcf,fileName,'-dpng');
+	saveas(gcf,fileName);
 
 end
