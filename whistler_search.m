@@ -56,7 +56,7 @@ function whistler_search( inputDirectory, outputDirectory )
 
 		%% Import and FFT wideband file
 
-		fileName = sprintf('%s%s',directory,files{i});
+		fileName = sprintf('%s%s',inputDirectory,files{i});
 		
 		[~, eField, Fs] = wideband_import(fileName);
 
@@ -116,7 +116,6 @@ function whistler_image(spectrogram, chirp, D, frequency, time, fileTime, locati
 	titleText = sprintf('%04g/%02g/%02g %02g:%02g:%02g, D = %.2f\n',...
 					 fileTime(1:5), location, D);
 				 
-	figure
 	subplot(1,2,1)
 	imagesc(time, frequency, spectrogram)
 	title(titleText);
