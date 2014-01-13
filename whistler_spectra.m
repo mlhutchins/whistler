@@ -11,10 +11,15 @@ function [ spectra, spectraBase ] = whistler_spectra( timeBase, freqBase, power,
 
 %% Cut down in frequency and space
 
-	spectra = power(freqBase < 10000 &...
-					freqBase > 1000,...
-					timeBase > startTime - startBuffer &...
-					timeBase < startTime + endBuffer);
+	timeCut = timeBase > startTime - startBuffer &...
+			  timeBase < startTime + endBuffer;
+		  
+	freqCut = freqBase < 10000 &...
+			  freqBase > 1000;
+
+	spectra = power(freqCut, timeCut);
+	spectraBase{1} = timeBase(timeCut);
+	spectraBase{2} = freqBase(freqCut);
 				
 %% Add padding as necessary
 
