@@ -39,6 +39,8 @@ function whistler_search( directory )
 	
 	%% Process each file
 	
+	tic;
+	
 	for i = 1 : length(files);
 
 		%% Import and FFT wideband file
@@ -54,6 +56,7 @@ function whistler_search( directory )
 		[ location, spectra ] = sliding_window( time, frequency, power );
 
 		if isempty(location)
+			fprintf('Processed %s : %.2f Seconds Elapsed\n',fileName,toc);
 			continue
 		end
 
@@ -82,6 +85,8 @@ function whistler_search( directory )
 			fprintf(dispersionText);
 				 
 		end
+		
+		fprintf('Processed %s : %.2f Seconds Elapsed\n',fileName,toc);
 
 	end
 
