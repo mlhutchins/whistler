@@ -135,18 +135,21 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		statistics(i,:) = cvStatistics{i};
 	end
 
+	% Remove parameters with no positives
+	remove = sum(isnan(statistics),2) > 0;
+	
 	threshold = 99;
 	best = [];
 	
 	while isempty(best)
 
-		cutoff = prctile(statistics,threshold);
+		cutoff = prctile(statistics(~remove,:),threshold);
 
 		top = bsxfun(@ge,statistics,cutoff);
 
-		best = find(sum(top,2) == 4);
+		best = find(sum(top,2) == 4 & ~remove);
 	
-		secondBest = find(sum(top,2) >= 3);
+		secondBest = find(sum(top,2) >= 3 & ~remove);
 		
 		threshold = threshold - 1;
 
