@@ -34,7 +34,7 @@ function [ location, spectra] = sliding_window( time, frequency, power )
 
 		[ sample, ~ ] = format_data( windowSpectra, 85, [3 4.5] );
 		
-		found(i) = predict(Theta, sample);
+		found(i) = predict(Theta, sample) - 1;
 
 	end
 	
@@ -44,6 +44,6 @@ function [ location, spectra] = sliding_window( time, frequency, power )
 	
 	spectra = spectra(idx);
 	
-	location = time(idx);
+	location = windows(idx);
 								 
 end
