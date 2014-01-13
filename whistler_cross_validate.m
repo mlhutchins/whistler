@@ -99,7 +99,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 		%% Adjust and Initialize Neural Network
 
-		neuralNetwork = neural_network_init(networkShape,lambda);
+		neuralNetwork = neural_network_init(networkShape,lambda, 200);
 		% hiddenLayerSize, lambda, maxIter
 
 		%% Train Initial Neural Network
