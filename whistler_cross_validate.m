@@ -11,6 +11,15 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		parallel_start
 	end
 	
+%% Get Git Hash
+
+	try
+		hash = git_hash;
+		hash = hash(1:7);
+	catch
+		hash = '';
+	end
+	
 %% Set random seed
 	
 	fprintf('Setting Random Seed\n');
@@ -120,7 +129,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 	cvStatistics(:,2:5) = cvParameters;
 
-	save('cvDebug','-v7.3');	
+	save(sprintf('cvDebug_%s',hash),'-v7.3');	
 	
 %% Get best performance
 
