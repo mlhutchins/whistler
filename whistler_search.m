@@ -1,18 +1,29 @@
-function whistler_search( directory )
-%WHISTLER_SEARCH processes wideband files in DIRECTORY and returns the
-%	times and best fit dispersion of located whistlers
+function whistler_search( inputDirectory, outputDirectory )
+%WHISTLER_SEARCH(inputDirectory, outputDirectory) processes wideband files
+%	in INPUTDIRECTORY and returns the times and best fit dispersion of located whistlers
+%	in whistlers.txt and as .png images in OUTPUTDIRECTORY
 %
 %	Written by: Michael Hutchins
 
+	%% Check number of inputs
+	
+	switch nargin
+		case 0
+			inputDirectory = '';
+			outputDirectory = '';
+		case 1
+			outputDirectory = '';
+	end
+
 	%% Format input
 	
-	if ~strcmp(directory(end),'/');
-		directory = sprintf('%s/',directory);
+	if ~strcmp(inputDirectory(end),'/');
+		inputDirectory = sprintf('%s/',inputDirectory);
 	end
 
 	%% Get file list
 	
-	fileList = dir(directory);
+	fileList = dir(inputDirectory);
 	index = 1;
 	files{length(fileList),1} = [];
 	
@@ -35,7 +46,7 @@ function whistler_search( directory )
 	
 	%% Initalize parameters
 	
-	reportFile = fopen('whistlers.txt','a+');
+	reportFile = fopen(sprintf('%swhistlers.txt',outputDirectory),'a+');
 	
 	%% Process each file
 	
@@ -78,7 +89,7 @@ function whistler_search( directory )
 			
 			%% Save spectrogram .png images and wideband snippets
 
-			whistler_image(spec, chirp, D, fw, tw, fileTime, location(j), '');
+			whistler_image(spec, chirp, D, fw, tw, fileTime, location(j), outputDirectory);
 			
 			%% Write times and dispersions to file and console
 			
