@@ -1,5 +1,6 @@
-%UNTITLED6 Summary of this function goes here
-%   Detailed explanation goes here
+%LABEL_DATA is an ad-hoc program to facilitate labeling training sets
+%
+%	Written by: Michael Hutchins
 
 	load trainingData
 	

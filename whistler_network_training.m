@@ -1,6 +1,8 @@
 function [Theta] = whistler_network_training
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%WHISTLER_NETWORK_TRAINING trains the whistler search neural network
+%	and saves the results fo whistlerNeuralNet.mat
+%
+%	Written by: Michael Hutchins
 
 %%
 
