@@ -1,6 +1,6 @@
-function [ spectra ] = whistler_spectra( timeBase, freqBase, power, startTime )
+function [ spectra, spectraBase ] = whistler_spectra( timeBase, freqBase, power, startTime )
 %WHISTLER_SPECTRA takes the FFT of wideband data y and returns the 
-%	portion of the spectra between 0 - 13 kHz as a 2D array
+%	portion of the spectra between 1 - 10 kHz as a 2D array
 %
 %	Written by: Michael Hutchins
 
