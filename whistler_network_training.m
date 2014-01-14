@@ -8,24 +8,30 @@ function [Theta] = whistler_network_training
 
 	addpath('subfunctions/');
 
+%% Get git hash
+
+	hash = git_hash;
+	hash = hash(1:7);	
 
 %% Load Data
 
-	importData = false;
-	dataFile = 'trainingData.mat';
+	images = [];
+	labels = [];
+		
+	loadHash = 'c8d30cd';
+	dataFile = sprintf('trainingData_%s.mat',loadHash);
 
-	if importData
+	if file_check(dataFile)
+		
+		load(dataFile);
+		
+	else
 		
 		[ images, labels ] = load_data;
 				
+		dataFile = sprintf('trainingData_%s.mat',hash);
+
 		save(dataFile,'-v7.3');
-
-	else
-
-		images = [];
-		labels = [];
-		
-		load(dataFile);
 		
 	end
 	
