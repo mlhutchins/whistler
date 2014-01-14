@@ -9,7 +9,7 @@ function [ images, labels ] = load_data
 
 	% Subdirectories
 	trainingDir = 'training/';
-	widebandDir = '/Volumes/Kronos/data/wideband/forks/';
+	widebandDir = '/wd2/wideband/forks/';
 
 	% File with whistler locations and labels
 	trainingFile = sprintf('%striggerTypes.txt',trainingDir);
