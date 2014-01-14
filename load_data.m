@@ -9,12 +9,12 @@ function [ images, labels ] = load_data
 
 	% Subdirectories
 	trainingDir = 'training/';
-	widebandDir = 'wideband/';
+	widebandDir = '/Volumes/Kronos/data/wideband/forks/';
 
 	% File with whistler locations and labels
 	trainingFile = sprintf('%striggerTypes.txt',trainingDir);
 
-	% Load training ist file
+	% Load training list file
 	fid = fopen(trainingFile,'r');
 	trainingList = fscanf(fid,'%g/%g/%g, %g:%g:%g, %g, %g, %g',[9 Inf]);
 	trainingList = trainingList';
@@ -35,14 +35,29 @@ function [ images, labels ] = load_data
 	labels = [trainingList(:,9); zeros(length(triggersNeg),1)];
 
 	% Triple training list for negative examples
-	trainingList = [trainingList(:,1:5);...
+	fileList = [trainingList(:,1:5);...
 					trainingList(:,1:5);...
 					trainingList(:,1:5)];
 
-	files = cell(size(trainingList,1),1);
+	% Get falseTrigger list
+	
+	falseFile = sprintf('%sfalseTriggers.txt',trainingDir);
+	fid = fopen(falseFile,'r');
+	falseList = fscanf(fid,'%g/%g/%g %g:%g:%g',[6 Inf]);
+	falseList = falseList';
+				
+	% Append falseList to triggers and the fileList
+	
+	fileList = [fileList; falseList(:,1:5)];
+	triggers = [triggers; falseList(:,6)];
+	labels	 = [labels;   zeros(size(falseList,1),1)];
+	
+	% Get file list from trainingList
+				
+	files = cell(size(fileList,1),1);
 
-	for i = 1 : size(trainingList,1);
-		files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',trainingList(i,1:5));
+	for i = 1 : size(fileList,1);
+		files{i} = sprintf('WB%04g%02g%02g%02g%02g00.dat',fileList(i,1:5));
 	end
 
 
