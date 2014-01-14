@@ -12,13 +12,20 @@ function [Theta] = whistler_network_training
 
 	hash = git_hash;
 	hash = hash(1:7);	
+	
+	
+%% Parallel start
+
+	if parallel_check
+		parallel_start;
+	end
 
 %% Load Data
 
 	images = [];
 	labels = [];
 		
-	loadHash = 'c8d30cd';
+	loadHash = 'bb12a78';
 	dataFile = sprintf('trainingData_%s.mat',loadHash);
 
 	if file_check(dataFile)
