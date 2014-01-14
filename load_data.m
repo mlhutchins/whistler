@@ -84,7 +84,7 @@ function [ images, labels ] = load_data
 
 %% Import spectra
 
-	fprintf('Importing %s data from %s\n',trainingFile,widebandDir);
+	fprintf('Importing %s data from %s and \n',trainingFile, falseFile, widebandDir);
 
 	% Import the first to get file sizes
 
