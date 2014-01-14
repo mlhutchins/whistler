@@ -67,17 +67,17 @@ function [ images, labels ] = load_data
 
 	fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
 	fprintf(fid,'scp ');
+	
+	[~, uniqueWB] = unique(files);
 
-	oldName = '';
+	for i = 1 : length(uniqueWB)
+		
+		index = uniqueWB(i);
+		
+		newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',fileList(index,1:3),files{index});
 
-	for i = 1 : length(files)
-		newName = sprintf('${DIR}/WB%04g%02g%02g/%s ',trainingList(i,1:3),files{i});
-
-		if ~strcmp(newName,oldName)
-			fprintf(fid,newName);
-		end
-
-		oldName = newName;
+		fprintf(fid,newName);
+	
 	end
 
 	fprintf(fid,'mlhutch@flash5.ess.washington.edu:widebandTemp/');
