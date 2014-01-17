@@ -24,7 +24,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	fprintf('Setting Random Seed\n');
 
-	rng(2);
+	rng(3);
 
 %% Split into training / CV / test
 	
