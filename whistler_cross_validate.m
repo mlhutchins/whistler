@@ -135,7 +135,11 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		%% Print status
 		
 		fprintf('%g / %g Done - %.2f seconds elapsed\n',i,size(cvParameters,1),toc(parTic));
-		
+		shapeString = sprintf('%g,',networkShape);
+		frequencyString = sprintf('[%g %g]',frequency(1), frequency(2));
+		fprintf('\t L: %g, NN: [%s] T: %g, F: %s |',lambda, shapeString, threshold, frequencyString);
+		fprintf('\t A: %.2f%%, P: %.2f%%, S: %.2f%%, Sp: %.2f%% \n',100*accuracy, 100*precision, 100*sensitivity, 100*specificity);
+
 	end
 
 	cvStatistics(:,2:5) = cvParameters;
