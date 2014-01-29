@@ -11,12 +11,13 @@ class WidebandVLF:
     def __init__(self, fileName):
         
         self.time = self.eField = self.power = self.Fs = self.freqBase = self.timeBase = self.fileStart = [];
-        self.file = fileName;
-        self.widebandImport()
-        self.widebandFFT()
-    
-    def widebandImport(self):
+        self.date = [1999,01,01,00,00,00];
+        
+        ## TODO: Set date from filename
+        
+    def importFile(self, fileName):
         ## Read in Wideband VLF Data
+        self.file = fileName;
 
         fid = open(self.file, 'rb')
     
