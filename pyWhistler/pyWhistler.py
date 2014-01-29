@@ -82,13 +82,17 @@ class WidebandVLF:
         self.freqBase = fw;
         self.power = SdB;
         
+        
     
 class Spectra:
     
     def __init__(self):
-        self.spec = self.D = self.tw = self.fRange = 0.0;
-    
-    def format(self):
+        self.time = 0.0;
+        
+    def format(self, wideband, time):
+        self.time = time;
+        self.date = wideband.date;
+        
         pass;
         
     def deChirp(self):
