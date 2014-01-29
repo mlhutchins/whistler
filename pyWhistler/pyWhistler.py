@@ -111,11 +111,30 @@ class NeuralNetwork:
     
 if __name__ == '__main__':
     
+    parser = argparse.ArgumentParser(description='Searches for whistlers in wideband WB.dat files')
+    parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help = 'Name (list) of wideband file(s)')
+
+    
+    args = parser.parse_args()
+    filenames = args.fileName
+    
     nnParams = 'nnParams.dat';
     
     neuralNet = NeuralNetwork(nnParams);
     
+    outputFile = 'search.txt';
     
+    for fileName in filenames:
+        
+        wideband = WidebandVLF(fileName);
+        
+        whistlers = wideband.whistlerSearch(neuralNet);
+        
+        dechirp = whistlers.deChirp()
+        
+        whistlers.whistlerPlot()
+        dechirp.whistlerPlot()
+        
+        
     
-    pass
     
