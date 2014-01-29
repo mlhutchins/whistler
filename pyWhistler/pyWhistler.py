@@ -112,6 +112,25 @@ class NeuralNetwork:
         
     def predict(self, whistler):
         pass;
+    def search(self, wideband):
+        
+        stepSize = 0.2 # seconds
+        windows = numpy.linspace(stepSize, 60.0, 60.0/stepSize);
+        
+        whistlers = []
+        
+        for time in windows:
+            
+            spectra = Spectra();
+            
+            spectra.format(wideband, time);
+            
+            located = self.predict(spectra);
+       
+            if located:
+                whistlers.append(spectra)
+        
+        return whistlers
 
     
 if __name__ == '__main__':
