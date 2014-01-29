@@ -105,13 +105,20 @@ class Spectra:
 class NeuralNetwork:
     
     def __init__(self, nnParams):
+        self.Theta = [];
         self.getNN(nnParams);
         
     def getNN(self, nnParams):
+        ## TODO: get Theta from nnParams file
         pass;
         
-    def predict(self, whistler):
+    def predict(self, spectra):
+        theta = self.Theta;
+
+        ## TODO: prediction code
+        
         pass;
+    
     def search(self, wideband):
         
         stepSize = 0.2 # seconds
