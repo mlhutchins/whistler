@@ -157,9 +157,13 @@ if __name__ == '__main__':
     
     for fileName in filenames:
         
-        wideband = WidebandVLF(fileName);
+        wideband = WidebandVLF()
         
-        whistlers = wideband.whistlerSearch(neuralNet);
+        wideband.importFile(fileName);
+        
+        wideband.widebandFFT();
+        
+        whistlers = neuralNet.search(neuralNet);
         
         dechirp = whistlers.deChirp()
         
