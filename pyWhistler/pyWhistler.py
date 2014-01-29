@@ -88,13 +88,42 @@ class Spectra:
     
     def __init__(self):
         self.time = 0.0;
-        
+        self.date
+        self.threshold = 85;
+        self.freqBand = [4.0, 4.5];
+        self.startBuffer = 0.5; #seconds
+        self.endBuffer = 0.75; #second
+        self.power = self.image = [];
+                
     def format(self, wideband, time):
         self.time = time;
         self.date = wideband.date;
         
-        pass;
+
+        timeBase = wideband.timeBase;
+        freqBase = wideband.freqbase;
         
+        image = wideband.power;
+        
+        image = image[(timeBase > time - self.startBuffer) & (timeBase < time + self.endBuffer),
+                      (freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1])];
+                      
+        self.power = image;
+                      
+        ## TODO: pad image
+        
+        maxPower = 0.0;
+        minPower = -40.0;
+        
+        image[image < minPower] = minPower;
+        image[image > maxPower] = maxPower;
+        
+        image = image > numpy.percentile(image[:],self.threshold);
+
+        self.image = image;
+        
+        self.width = image.shape[0];
+                
     def deChirp(self):
         
         pass;
