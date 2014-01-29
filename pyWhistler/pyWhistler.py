@@ -1,6 +1,7 @@
 # Text
 
-
+import argparse
+import numpy
 
 # Import statements
 
