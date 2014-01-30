@@ -85,7 +85,7 @@ class Spectra:
         self.time = 0.0;
         self.date = [];
         self.threshold = 85;
-        self.freqBand = [4.0, 4.5];
+        self.freqBand = [3.0, 4.5];
         self.startBuffer = 0.5; #seconds
         self.endBuffer = 0.75; #second
         self.power = self.image = [];
