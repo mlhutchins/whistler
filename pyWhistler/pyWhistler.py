@@ -5,7 +5,7 @@ import numpy
 
 class WidebandVLF:
     
-    def __init__(self, fileName):
+    def __init__(self):
         
         self.time = self.eField = self.power = self.Fs = self.freqBase = self.timeBase = self.fileStart = [];
         self.date = [1999,01,01,00,00,00];
@@ -83,7 +83,7 @@ class Spectra:
     
     def __init__(self):
         self.time = 0.0;
-        self.date
+        self.date = [];
         self.threshold = 85;
         self.freqBand = [4.0, 4.5];
         self.startBuffer = 0.5; #seconds
@@ -96,12 +96,13 @@ class Spectra:
         
 
         timeBase = wideband.timeBase;
-        freqBase = wideband.freqbase;
+        freqBase = wideband.freqBase;
         
         image = wideband.power;
         
-        image = image[(timeBase > time - self.startBuffer) & (timeBase < time + self.endBuffer),
-                      (freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1])];
+        
+        image = image[(freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1]),:];
+        image = image[:,(timeBase > (time - self.startBuffer)) & (timeBase < (time + self.endBuffer))];
                       
         self.power = image;
                       
@@ -142,7 +143,7 @@ class NeuralNetwork:
         theta = self.Theta;
 
         nLayers = len(theta);
-        m = spectra.shape[1];
+        m = spectra.image.shape[1];
         
         z = [];
         a = [];
