@@ -223,7 +223,7 @@ if __name__ == '__main__':
         
         wideband.widebandFFT();
         
-        whistlers = neuralNet.search(neuralNet);
+        whistlers = neuralNet.search(wideband);
         
         dechirp = whistlers.deChirp()
         
