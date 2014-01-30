@@ -131,14 +131,31 @@ class Spectra:
     
 class NeuralNetwork:
     
-    def __init__(self, nnParams):
+    def __init__(self):
         self.Theta = [];
         self.getNN(nnParams);
         
     def getNN(self, nnParams):
         ## TODO: get Theta from nnParams file
-        pass;
-        
+        f = open(nnParams)
+        thetaShape = f.readline().split();
+
+        while (len(thetaShape) > 0):
+            
+            m = int(thetaShape.pop(0))
+            n = int(thetaShape.pop(0))
+
+            theta = numpy.zeros((m,n));
+            
+            for i in range(m):
+                newLine = f.readline().split();
+
+                for j in range(n):
+                    theta[i,j] = newLine[j];
+            
+            self.Theta.append(theta);
+            f.readline(); # Skip empty line between theta parameters
+
     def predict(self, spectra):
         theta = self.Theta;
 
@@ -207,9 +224,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
     filenames = args.fileName
     
-    nnParams = 'nnParams.dat';
+    nnParams = 'nnTest.dat';
     
-    neuralNet = NeuralNetwork(nnParams);
+    neuralNet = NeuralNetwork();
+    
+    neuralNet.getNN(nnParams);
     
     outputFile = 'search.txt';
     
