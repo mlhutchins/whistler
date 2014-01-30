@@ -116,7 +116,7 @@ class Spectra:
         
         image = image > numpy.percentile(image[:],self.threshold);
 
-        self.image = image;
+        self.image = image.astype(float);
         
         self.width = image.shape[0];
                 
@@ -178,7 +178,9 @@ class NeuralNetwork:
                 zPrime = numpy.dot(a[i - 1], theta[i - 1]);
                 z[i] = self.sigmoid(zPrime);
                 
-            a[i] = numpy.concatenate((numpy.zeros(m,1), z[i]), 0);
+               
+            biasTerm = numpy.zeros((m,1));
+            a[i] = numpy.concatenate((biasTerm, z[i]), 0);
         
         a[-1] = a[-1][:,0:-1];
         
