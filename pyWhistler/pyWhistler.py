@@ -166,8 +166,11 @@ class NeuralNetwork:
     def predict(self, spectra):
         theta = self.Theta;
 
+        image = spectra.image;
+        image = numpy.ravel(image,1);
+
         nLayers = len(theta);
-        m = spectra.image.shape[1];
+        m = len(image);
         
         z = [];
         a = [];
@@ -175,12 +178,12 @@ class NeuralNetwork:
             z.append([])
             a.append([])
             
-        z[0] = numpy.ravel(spectra.image,1);
+        z[0] = image;
 
         for i in range(nLayers + 1):
             
             if i == 0:
-                z[i] = numpy.ravel(spectra.image,1);
+                z[i] = image;
             else:
                 zPrime = numpy.dot(a[i - 1], theta[i - 1]);
                 z[i] = self.sigmoid(zPrime);
