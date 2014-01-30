@@ -6,6 +6,22 @@ function export_theta( Theta, fileName )
 
 	fid = fopen(fileName,'wt');
 	
+	%% Print the shape in the first line
+	
+	for i = 1 : length(Theta);
+		
+		m = size(Theta{i},1);
+		n = size(Theta{i},2);
+		
+		fprintf(fid,'%g %g ',m,n);
+		
+	end
+	
+	fprintf(fid,'\n');
+	
+	
+	%% Print Theta
+	
 	for i = 1 : length(Theta)
 		
 		currentTheta = Theta{i};
