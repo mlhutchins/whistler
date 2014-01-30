@@ -1,10 +1,7 @@
-# Text
+# TODO: Documentation
 
 import argparse
 import numpy
-
-# Import statements
-
 
 class WidebandVLF:
     
@@ -81,9 +78,7 @@ class WidebandVLF:
         self.timeBase = tw;
         self.freqBase = fw;
         self.power = SdB;
-        
-        
-    
+         
 class Spectra:
     
     def __init__(self):
@@ -125,10 +120,12 @@ class Spectra:
         self.width = image.shape[0];
                 
     def deChirp(self):
-        
+        ## TODO: deChirp code
         pass;
                     
     def whistlerPlot(self):
+        
+        ## TODO: spectra plotting code
         pass;
     
 class NeuralNetwork:
