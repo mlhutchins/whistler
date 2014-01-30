@@ -99,14 +99,21 @@ class Spectra:
         freqBase = wideband.freqBase;
         
         image = wideband.power;
+                
+        step = timeBase[1] - timeBase[0];
         
+        padding = numpy.zeros((image.shape[0],image.shape[1]));
+        image = numpy.concatenate((padding,image),1);
+        image = numpy.concatenate((image,padding),1);
+        
+        timeTemp = timeBase.copy();
+        timeBase = numpy.concatenate((timeTemp - timeTemp[-1] - step,timeBase),0);
+        timeBase = numpy.concatenate((timeBase,timeTemp + timeTemp[-1] + step),0);
         
         image = image[(freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1]),:];
         image = image[:,(timeBase > (time - self.startBuffer)) & (timeBase < (time + self.endBuffer))];
                       
         self.power = image;
-                      
-        ## TODO: pad image
         
         maxPower = 0.0;
         minPower = -40.0;
