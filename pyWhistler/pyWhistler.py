@@ -144,10 +144,41 @@ class NeuralNetwork:
     def predict(self, spectra):
         theta = self.Theta;
 
-        ## TODO: prediction code
+        nLayers = len(theta);
+        m = spectra.shape[1];
         
-        pass;
+        z = [];
+        a = [];
+        for dummy in range(nLayers):
+            z.append([])
+            a.append([])
+            
+        z[0] = numpy.ravel(spectra.image,1);
+
+        for i in range(nLayers + 1):
+            
+            if i == 0:
+                z[i] = numpy.ravel(spectra.image,1);
+            else:
+                zPrime = numpy.dot(a[i - 1], theta[i - 1]);
+                z[i] = self.sigmoid(zPrime);
+                
+            a[i] = numpy.concatenate((numpy.zeros(m,1), z[i]), 0);
+        
+        a[-1] = a[-1][:,0:-1];
+        
+        h = a[-1];
+        
+        p = numpy.argmax(h, axis = 1);
+        
+        return p - 1.0
     
+    def sigmoid(self, z):
+        return 1.0 / (1.0 + numpy.exp(-z));
+        
+    def sigmoidGradient(self,z):
+        return self.sigmoid(z) * (1 - self.sigmoid(z));
+        
     def search(self, wideband):
         
         stepSize = 0.2 # seconds
