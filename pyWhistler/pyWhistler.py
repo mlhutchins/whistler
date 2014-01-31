@@ -197,7 +197,6 @@ class NeuralNetwork:
             if i == 0:
                 z[i] = image;
             else:
-                print i
                 zPrime = numpy.dot(a[i - 1], numpy.transpose(theta[i - 1]));
                 z[i] = self.sigmoid(zPrime);
                 
