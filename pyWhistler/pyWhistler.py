@@ -140,10 +140,9 @@ class NeuralNetwork:
     
     def __init__(self):
         self.Theta = [];
-        self.getNN(nnParams);
         
     def getNN(self, nnParams):
-        ## TODO: get Theta from nnParams file
+
         f = open(nnParams)
         thetaShape = f.readline().split();
 
