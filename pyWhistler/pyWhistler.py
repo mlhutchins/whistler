@@ -143,6 +143,8 @@ class NeuralNetwork:
         
     def getNN(self, nnParams):
 
+        self.Theta = [];
+
         f = open(nnParams)
         thetaShape = f.readline().split();
 
