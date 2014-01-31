@@ -168,9 +168,10 @@ class NeuralNetwork:
 
         image = spectra.image;
         image = numpy.ravel(image,1);
+        image = numpy.reshape(image,(1,len(image)));
 
         nLayers = len(theta);
-        m = len(image);
+        m = image.shape[0];
         
         z = [];
         a = [];
@@ -180,17 +181,18 @@ class NeuralNetwork:
             
         z[0] = image;
 
-        for i in range(nLayers + 1):
+        for i in range(nLayers):
             
             if i == 0:
                 z[i] = image;
             else:
-                zPrime = numpy.dot(a[i - 1], theta[i - 1]);
+                print i
+                zPrime = numpy.dot(a[i - 1], numpy.transpose(theta[i - 1]));
                 z[i] = self.sigmoid(zPrime);
                 
                
             biasTerm = numpy.zeros((m,1));
-            a[i] = numpy.concatenate((biasTerm, z[i]), 0);
+            a[i] = numpy.concatenate((biasTerm, z[i]), 1);
         
         a[-1] = a[-1][:,0:-1];
         
