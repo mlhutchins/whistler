@@ -176,13 +176,13 @@ class NeuralNetwork:
         
         z = [];
         a = [];
-        for dummy in range(nLayers):
+        for dummy in range(nLayers + 1):
             z.append([])
             a.append([])
             
         z[0] = image;
 
-        for i in range(nLayers):
+        for i in range(nLayers + 1):
             
             if i == 0:
                 z[i] = image;
