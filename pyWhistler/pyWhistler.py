@@ -266,6 +266,8 @@ if __name__ == '__main__':
         
         whistlers = neuralNet.search(wideband);
         
+        # TODO: Iterate over list of whistlers to deChirp and then plot
+        
         dechirp = whistlers.deChirp()
         
         whistlers.whistlerPlot()
