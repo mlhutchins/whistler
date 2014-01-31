@@ -99,19 +99,29 @@ class Spectra:
         freqBase = wideband.freqBase;
         
         image = wideband.power;
-                
-        step = timeBase[1] - timeBase[0];
-        
+                        
         padding = numpy.zeros((image.shape[0],image.shape[1]));
         image = numpy.concatenate((padding,image),1);
         image = numpy.concatenate((image,padding),1);
         
-        timeTemp = timeBase.copy();
-        timeBase = numpy.concatenate((timeTemp - timeTemp[-1] - step,timeBase),0);
-        timeBase = numpy.concatenate((timeBase,timeTemp + timeTemp[-1] + step),0);
+        step = timeBase[10] - timeBase[9];
         
-        image = image[(freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1]),:];
-        image = image[:,(timeBase > (time - self.startBuffer)) & (timeBase < (time + self.endBuffer))];
+        timeTemp = timeBase.copy();
+        timeBase = numpy.concatenate((timeTemp - timeTemp[-1],timeBase),0);
+        timeBase = numpy.concatenate((timeBase,timeTemp + timeTemp[-1]),0);
+        
+        expectedTime = numpy.floor((self.startBuffer + self.endBuffer) / (step))
+
+        freqCut = (freqBase > 1000 * self.freqBand[0]) & (freqBase < 1000 * self.freqBand[1]);
+        timeCut = (timeBase > (time - self.startBuffer)) & (timeBase < (time + self.endBuffer));
+        
+        if numpy.sum(timeCut) > expectedTime:
+            timeCut = timeCut & numpy.roll(timeCut,-1)
+        elif (numpy.sum(timeCut) < expectedTime):
+            timeCut = timeCut | numpy.roll(timeCut,1)
+            
+        image = image[freqCut,:];
+        image = image[:,timeCut];
                       
         self.power = image;
         
