@@ -266,13 +266,20 @@ if __name__ == '__main__':
         
         whistlers = neuralNet.search(wideband);
         
-        # TODO: Iterate over list of whistlers to deChirp and then plot
+        for whistler in whistlers:
         
-        dechirp = whistlers.deChirp()
+            # TODO: Iterate over list of whistlers to deChirp and then plot
+            
+    
+            whistler.formatimage = spectrogramFormat;
+            whistler.formatimage.makename(fileName);
+            
+            whistler.whistlerPlot()
+            
+            dechirp = whistlers.deChirp()
         
-        whistlers.whistlerPlot()
-        dechirp.whistlerPlot()
-        
+            dechirp.whistlerPlot()
+            
         
     
     
