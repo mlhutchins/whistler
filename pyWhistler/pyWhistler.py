@@ -238,6 +238,28 @@ class NeuralNetwork:
         
         return whistlers
 
+class imageFormat:
+    
+    def __init__(self):
+        self.width = 7.5;
+        self.height = 7.5;
+        self.dpi = 75;
+        self.savename = 'whistler.png';
+        self.name = 'whistler';
+        self.imagedir = '';
+
+    def makename(self,filename):
+        name = filename.split("/");
+        name = name[-1];
+        self.name = name;
+        
+        name = name[:-6];
+        
+        name = self.imagedir + name + '.png';
+        self.savename = name;
+        
+        
+    
     
 if __name__ == '__main__':
     
@@ -255,6 +277,9 @@ if __name__ == '__main__':
     neuralNet.getNN(nnParams);
     
     outputFile = 'search.txt';
+    
+    spectrogramFormat = imageFormat();
+    spectrogramFormat.imagedir = '';
     
     for fileName in filenames:
         
