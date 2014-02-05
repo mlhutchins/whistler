@@ -160,17 +160,14 @@ class Spectra:
         time = self.timebase;
         
         # Plot the spectrogram and set colorbar limits for whistler case
-        ax1 = plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
+        plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
         
         # Generate and label colorbar
         cbar = plt.colorbar(orientation = 'horizontal')
         cbar.set_label('Spectral Power (dB)')
         
         # Format plot
-        self.insertSpectrogram(ax1, 1, self.timebase, self.freqbase, self.freqBand)
-        
-        # Set the spectrogram view limits
-        plt.xlim(time[0], time[-1])
+        self.insertSpectrogram(10, self.timebase, self.freqbase, self.freqBand)
         
         # Set title to give filename and sampling frequency
         plt.title(self.formatimage.name)
@@ -181,7 +178,10 @@ class Spectra:
         # Close the plot
         plt.close(fig)
         
-    def insertSpectrogram(self, ax, scale, tw, fw, band):
+    def insertSpectrogram(self, scale, tw, fw, band):
+        
+        # Set scale to be a float
+        scale = float(scale);
         
         # Set plot labels
         plt.xlabel('Time (s)')
@@ -202,10 +202,10 @@ class Spectra:
         plt.xticks(tickXloc,tickXlabel)
         plt.yticks(tickYloc,tickYlabel.astype(int))
         
-        plt.ylim(band[0], band[1])
+        #plt.ylim(1000 * band[0], 1000 * band[1])
         
         # Aspect ratio to fill entire plot
-        ax.set_aspect('auto')    
+        # ax.set_aspect('auto')    
 
     
 class NeuralNetwork:
