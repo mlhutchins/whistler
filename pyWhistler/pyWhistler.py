@@ -1,8 +1,11 @@
 # TODO: Documentation
 
 import argparse
-import numpy
-
+import numpy  
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+        
 class WidebandVLF:
     
     def __init__(self):
