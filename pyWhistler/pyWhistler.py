@@ -154,20 +154,9 @@ class Spectra:
         
         # Initialize figure
         fig = plt.figure(figsize=(self.formatimage.width,self.formatimage.height));
-        
-        # Get start and end of the time window
-
-        time = self.timebase;
-        
-        # Plot the spectrogram and set colorbar limits for whistler case
-        plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
-        
-        # Generate and label colorbar
-        cbar = plt.colorbar(orientation = 'horizontal')
-        cbar.set_label('Spectral Power (dB)')
-        
-        # Format plot
-        self.insertSpectrogram(10, self.timebase, self.freqbase, self.freqBand)
+                
+        # Create spectrogram plot
+        self.insertSpectrogram()
         
         # Set title to give filename and sampling frequency
         plt.title(self.formatimage.name)
@@ -178,45 +167,52 @@ class Spectra:
         # Close the plot
         plt.close(fig)
         
-    def insertSpectrogram(self, scale, tw, fw, band):
+    def insertSpectrogram(self):
+        
+        # Plot the spectrogram and set colorbar limits
+        plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
         
         # Set scale to be a float
-        scale = float(scale);
+        scale = 10.0;
         
         # Set plot labels
         plt.xlabel('Time (s)')
         plt.ylabel('Frequency (kHz)')
         
-        # Set X and Y tick marks to be integer values       
-        tStart = numpy.ceil( tw[0] * scale) / scale;
-        tEnd = numpy.floor( tw[-1] * scale) / scale;
-        
-
-        #tickXloc = numpy.arange(tStart,tEnd,step= (1 / scale))
-        #tickXlabel = tickXloc[::2]
-        
+        # X and Y tick skip interval  
         yStep = 4;
-        xStep = 20;
+        xStep = 2;
+        
+        # Setup X tick marks and labels      
+        tStart = numpy.ceil( self.timebase[0] * scale) / scale;
+        tEnd = numpy.ceil( self.timebase[-1] * scale) / scale;
+        
+        tSteps = numpy.floor((1 / scale) / (self.timebase[1] - self.timebase[0]));
+        
+        tickXloc = numpy.arange(0,len(self.timebase),step = tSteps)
+        tickXlabel = numpy.arange(tStart,tEnd,step = (1 / scale));
 
-        tickXloc = numpy.arange(0,len(tw))
+        # Setup Y Tick marks and labels
+        tickYloc = numpy.arange(0,len(self.freqbase))
+        tickYlabel = numpy.round(self.freqbase)
+
+        # Skip designated amounts and round to nearest 0.1 kHz and 0.1 s
         tickXloc = tickXloc[::xStep]
-        tickXlabel = tw[::xStep];
+        tickXlabel = tickXlabel[::xStep];
         tickXlabel = numpy.round(tickXlabel * 10.0) / 10.0;
-        plt.xticks(tickXloc,tickXlabel)
-        print tickXloc
-        print tickXlabel
 
-        tickYloc = numpy.arange(0,len(fw))
         tickYloc = tickYloc[::yStep]
-        tickYlabel = numpy.round(fw[::yStep])
+        tickYlabel = tickYlabel[::yStep];
         tickYlabel = numpy.round(tickYlabel / 100.0) / 10.0;
+        
+        # Update tickmarks
+        plt.xticks(tickXloc,tickXlabel)
         plt.yticks(tickYloc,tickYlabel)
-        
-        #plt.ylim(1000 * band[0], 1000 * band[1])
-        
-        # Aspect ratio to fill entire plot
-        # ax.set_aspect('auto')    
 
+        # Generate and label colorbar
+        cbar = plt.colorbar(orientation = 'horizontal')
+        cbar.set_label('Spectral Power (dB)')
+        
     
 class NeuralNetwork:
     
