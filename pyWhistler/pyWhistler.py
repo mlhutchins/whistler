@@ -152,8 +152,61 @@ class Spectra:
                     
     def whistlerPlot(self):
         
-        ## TODO: spectra plotting code
-        pass;
+        # Initialize figure
+        fig = plt.figure(figsize=(self.formatimage.width,self.formatimage.height));
+        
+        # Get start and end of the time window
+
+        time = self.timebase;
+        
+        # Plot the spectrogram and set colorbar limits for whistler case
+        ax1 = plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
+        
+        # Generate and label colorbar
+        cbar = plt.colorbar(orientation = 'horizontal')
+        cbar.set_label('Spectral Power (dB)')
+        
+        # Format plot
+        self.insertSpectrogram(ax1, 1, self.timebase, self.freqbase, self.freqBand)
+        
+        # Set the spectrogram view limits
+        plt.xlim(time[0], time[-1])
+        
+        # Set title to give filename and sampling frequency
+        plt.title(self.formatimage.name)
+        
+        # Save figure
+        plt.savefig(self.formatimage.savename,dpi = self.formatimage.dpi)
+        
+        # Close the plot
+        plt.close(fig)
+        
+    def insertSpectrogram(self, ax, scale, tw, fw, band):
+        
+        # Set plot labels
+        plt.xlabel('Time (s)')
+        plt.ylabel('Frequency (kHz)')
+        
+        # Set X and Y tick marks to be integer values       
+        tStart = numpy.ceil( tw[0] * scale) / scale;
+        tEnd = numpy.floor( tw[-1] * scale) / scale;
+        
+        tickXloc = numpy.arange(tStart,tEnd,step= (1 / scale))
+        tickXlabel = tickXloc[::2]
+        
+        fStep = fw[2] - fw[1]
+        fStep = fStep/1000
+        fStep = int(numpy.round(1 / fStep))
+        tickYloc = numpy.arange(0,len(fw),step=2*fStep)
+        tickYlabel = numpy.round(fw[tickYloc]/1000)
+        plt.xticks(tickXloc,tickXlabel)
+        plt.yticks(tickYloc,tickYlabel.astype(int))
+        
+        plt.ylim(band[0], band[1])
+        
+        # Aspect ratio to fill entire plot
+        ax.set_aspect('auto')    
+
     
 class NeuralNetwork:
     
