@@ -88,6 +88,7 @@ class Spectra:
         self.freqBand = [3.0, 4.5];
         self.startBuffer = 0.5; #seconds
         self.endBuffer = 0.75; #second
+        self.formatimage = imageFormat();
         self.power = self.image = [];
                 
     def format(self, wideband, time):
@@ -119,6 +120,9 @@ class Spectra:
             timeCut = timeCut & numpy.roll(timeCut,-1)
         elif (numpy.sum(timeCut) < expectedTime):
             timeCut = timeCut | numpy.roll(timeCut,1)
+            
+        self.timebase = timeBase[timeCut];
+        self.freqbase = freqBase[freqCut];
             
         image = image[freqCut,:];
         image = image[:,timeCut];
