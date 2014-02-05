@@ -2,6 +2,8 @@
 
 import argparse
 import numpy  
+
+## TODO: add case for systems without matplotlib
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
