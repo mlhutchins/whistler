@@ -191,16 +191,26 @@ class Spectra:
         tStart = numpy.ceil( tw[0] * scale) / scale;
         tEnd = numpy.floor( tw[-1] * scale) / scale;
         
-        tickXloc = numpy.arange(tStart,tEnd,step= (1 / scale))
-        tickXlabel = tickXloc[::2]
+
+        #tickXloc = numpy.arange(tStart,tEnd,step= (1 / scale))
+        #tickXlabel = tickXloc[::2]
         
-        fStep = fw[2] - fw[1]
-        fStep = fStep/1000
-        fStep = int(numpy.round(1 / fStep))
-        tickYloc = numpy.arange(0,len(fw),step=2*fStep)
-        tickYlabel = numpy.round(fw[tickYloc]/1000)
+        yStep = 4;
+        xStep = 20;
+
+        tickXloc = numpy.arange(0,len(tw))
+        tickXloc = tickXloc[::xStep]
+        tickXlabel = tw[::xStep];
+        tickXlabel = numpy.round(tickXlabel * 10.0) / 10.0;
         plt.xticks(tickXloc,tickXlabel)
-        plt.yticks(tickYloc,tickYlabel.astype(int))
+        print tickXloc
+        print tickXlabel
+
+        tickYloc = numpy.arange(0,len(fw))
+        tickYloc = tickYloc[::yStep]
+        tickYlabel = numpy.round(fw[::yStep])
+        tickYlabel = numpy.round(tickYlabel / 100.0) / 10.0;
+        plt.yticks(tickYloc,tickYlabel)
         
         #plt.ylim(1000 * band[0], 1000 * band[1])
         
