@@ -316,14 +316,14 @@ class imageFormat:
         self.name = 'whistler';
         self.imagedir = '';
 
-    def makename(self,filename):
+    def makename(self,filename, append):
         name = filename.split("/");
         name = name[-1];
         self.name = name;
         
         name = name[:-6];
         
-        name = self.imagedir + name + '.png';
+        name = self.imagedir + name + append + '.png';
         self.savename = name;
         
         
@@ -365,13 +365,16 @@ if __name__ == '__main__':
             
     
             whistler.formatimage = spectrogramFormat;
-            whistler.formatimage.makename(fileName);
+            
+            # Append time of whistler to the filename
+            appendText = '_' + str(int(whistler.time));
+            whistler.formatimage.makename(fileName, appendText);
             
             whistler.whistlerPlot()
             
-            dechirp = whistlers.deChirp()
+            #dechirp = whistlers.deChirp()
         
-            dechirp.whistlerPlot()
+          #  dechirp.whistlerPlot()
             
         
     
