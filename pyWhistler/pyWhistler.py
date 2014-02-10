@@ -430,7 +430,10 @@ if __name__ == '__main__':
     parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help = 'Name (list) of wideband file(s)')
 
     ## TODO: add more input arguments such as no plotting or no dispersion
-
+    ## TODO: Designate input WB directory, designate output for results and figures
+    ## TODO:  Designate nnParams file
+    ## TODO:   Any sort of file appending
+    
     args = parser.parse_args()
     filenames = args.fileName
     
