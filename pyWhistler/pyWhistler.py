@@ -17,10 +17,10 @@ class WidebandVLF:
     def __init__(self):
         
         self.time = self.eField = self.power = self.Fs = self.freqBase = self.timeBase = self.fileStart = [];
-        self.date = [1999,01,01,00,00,00];
+        self.date = [1999, 01, 01, 00, 00, 00];
                 
     def importFile(self, fileName):
-        ## Read in Wideband VLF Data
+        # # Read in Wideband VLF Data
         self.file = fileName;
 
         fileDate = fileName.split('/')
@@ -36,20 +36,20 @@ class WidebandVLF:
 
         fid = open(self.file, 'rb')
     
-        self.fileStart = numpy.fromfile(fid, dtype=numpy.dtype('<i4'), count = 1)
-        Fs = numpy.fromfile(fid, dtype=numpy.dtype('<f8'), count = 1)
-        offset = numpy.fromfile(fid, dtype=numpy.dtype('<f8'), count = 1)
+        self.fileStart = numpy.fromfile(fid, dtype=numpy.dtype('<i4'), count=1)
+        Fs = numpy.fromfile(fid, dtype=numpy.dtype('<f8'), count=1)
+        offset = numpy.fromfile(fid, dtype=numpy.dtype('<f8'), count=1)
         y = numpy.fromfile(fid, dtype=numpy.dtype('<i2'))
     
-        ## Normalize to soundcard units and switch to float
+        # # Normalize to soundcard units and switch to float
         y = y.astype(numpy.float)
-        y = y/32768
+        y = y / 32768
     
-        ## Make the time base
+        # # Make the time base
     
-        t = numpy.arange(0.0,len(y))
+        t = numpy.arange(0.0, len(y))
         t = t + offset
-        t = t/Fs
+        t = t / Fs
     
         self.eField = y;
         self.time = t;
@@ -60,38 +60,38 @@ class WidebandVLF:
         y = self.eField;
         Fs = self.Fs;
         
-        Nw = 2**10 # Hanning window length
-        Ny = len(y) # Sample length
+        Nw = 2 ** 10  # Hanning window length
+        Ny = len(y)  # Sample length
         
         # Create Hanning window
-        j = numpy.arange(1.0,Nw+1)
-        w = 0.5 * (1 - numpy.cos(2*numpy.pi*(j-1)/Nw))
-        varw = 3./8.
+        j = numpy.arange(1.0, Nw + 1)
+        w = 0.5 * (1 - numpy.cos(2 * numpy.pi * (j - 1) / Nw))
+        varw = 3. / 8.
         
         # Window the data
-        nwinf = numpy.floor(Ny/Nw)
+        nwinf = numpy.floor(Ny / Nw)
         nwinh = nwinf - 1
         nwin = nwinf + nwinh
         
         # Fill in the windows array
-        yw = numpy.zeros((Nw,nwin))
-        yw[:,0:nwin:2] = y[:nwinf*Nw].reshape(Nw,nwinf,order='F').copy()
-        yw[:,1:(nwin-1):2] = y[(Nw/2):(nwinf-0.5)*Nw].reshape(Nw,nwinh,order='F').copy()
+        yw = numpy.zeros((Nw, nwin))
+        yw[:, 0:nwin:2] = y[:nwinf * Nw].reshape(Nw, nwinf, order='F').copy()
+        yw[:, 1:(nwin - 1):2] = y[(Nw / 2):(nwinf - 0.5) * Nw].reshape(Nw, nwinh, order='F').copy()
         
         # Taper the data
-        yt = yw * numpy.tile(w,(nwin,1)).T
+        yt = yw * numpy.tile(w, (nwin, 1)).T
         
         # DFT of the data
         ythat = numpy.zeros(yt.shape)
         ythat = ythat + 0j
         for i in range(yt.shape[1]):
-            ythat[:,i] = numpy.fft.fft(yt[:,i])
-        S = (numpy.absolute(ythat)**2)/varw
-        S = S[0:Nw/2,:]
-        SdB = 10*numpy.log10(S)
-        Mw = numpy.arange(0,Nw/2)
+            ythat[:, i] = numpy.fft.fft(yt[:, i])
+        S = (numpy.absolute(ythat) ** 2) / varw
+        S = S[0:Nw / 2, :]
+        SdB = 10 * numpy.log10(S)
+        Mw = numpy.arange(0, Nw / 2)
         fw = Fs * Mw / Nw
-        tw = numpy.arange(1,nwin+1) * 0.5 * Nw/Fs
+        tw = numpy.arange(1, nwin + 1) * 0.5 * Nw / Fs
         
         self.timeBase = tw;
         self.freqBase = fw;
@@ -104,8 +104,8 @@ class Spectra:
         self.date = [];
         self.threshold = 85;
         self.freqBand = [3.0, 4.5];
-        self.startBuffer = 0.5; #seconds
-        self.endBuffer = 0.75; #second
+        self.startBuffer = 0.5;  # seconds
+        self.endBuffer = 0.75;  # second
         self.formatimage = imageFormat();
         self.power = self.image = self.dechirped = [];
         self.dechirpedOffset = 0.0;
@@ -121,15 +121,15 @@ class Spectra:
         
         image = wideband.power;
                         
-        padding = numpy.zeros((image.shape[0],image.shape[1]));
-        image = numpy.concatenate((padding,image),1);
-        image = numpy.concatenate((image,padding),1);
+        padding = numpy.zeros((image.shape[0], image.shape[1]));
+        image = numpy.concatenate((padding, image), 1);
+        image = numpy.concatenate((image, padding), 1);
         
         step = timeBase[10] - timeBase[9];
         
         timeTemp = timeBase.copy();
-        timeBase = numpy.concatenate((timeTemp - timeTemp[-1],timeBase),0);
-        timeBase = numpy.concatenate((timeBase,timeTemp + timeTemp[-1]),0);
+        timeBase = numpy.concatenate((timeTemp - timeTemp[-1], timeBase), 0);
+        timeBase = numpy.concatenate((timeBase, timeTemp + timeTemp[-1]), 0);
         
         expectedTime = numpy.floor((self.startBuffer + self.endBuffer) / (step))
 
@@ -137,15 +137,15 @@ class Spectra:
         timeCut = (timeBase > (time - self.startBuffer)) & (timeBase < (time + self.endBuffer));
         
         if numpy.sum(timeCut) > expectedTime:
-            timeCut = timeCut & numpy.roll(timeCut,-1)
+            timeCut = timeCut & numpy.roll(timeCut, -1)
         elif (numpy.sum(timeCut) < expectedTime):
-            timeCut = timeCut | numpy.roll(timeCut,1)
+            timeCut = timeCut | numpy.roll(timeCut, 1)
             
         self.timebase = timeBase[timeCut];
         self.freqbase = freqBase[freqCut];
             
-        image = image[freqCut,:];
-        image = image[:,timeCut];
+        image = image[freqCut, :];
+        image = image[:, timeCut];
                       
         self.power = image;
         
@@ -155,7 +155,7 @@ class Spectra:
         image[image < minPower] = minPower;
         image[image > maxPower] = maxPower;
         
-        image = image > numpy.percentile(image[:],self.threshold);
+        image = image > numpy.percentile(image[:], self.threshold);
 
         self.image = image.astype(float);
         
@@ -163,7 +163,7 @@ class Spectra:
                 
     def deChirp(self):
 
-        ## TODO: better de-chirping
+        # # TODO: better de-chirping
 
         def _de_chirp(self, D):
  
@@ -172,10 +172,10 @@ class Spectra:
             fRange = self.freqbase.copy();
             
             fRange[0] = fRange[1]
-            fShift = 1./numpy.sqrt(fRange)
+            fShift = 1. / numpy.sqrt(fRange)
             
             # Convert to seconds in units of time step
-            fSamp = 1./(self.timebase[1]-self.timebase[0])
+            fSamp = 1. / (self.timebase[1] - self.timebase[0])
             fShift = fSamp * fShift
             
             intShift = numpy.ceil(0.5 * D * fShift);
@@ -186,14 +186,14 @@ class Spectra:
             for j in range(len(fRange)):
                 
                 shiftLevel = -intShift[j]
-                shift[j,:] = numpy.roll(self.power[j,:],int(shiftLevel));    
+                shift[j, :] = numpy.roll(self.power[j, :], int(shiftLevel));    
                 
             return shift
         
         def _find_d(self, Dtest):
             
             # Initialize output array
-            spectralPower = numpy.zeros((len(Dtest),self.power.shape[0]))
+            spectralPower = numpy.zeros((len(Dtest), self.power.shape[0]))
         
             for i in range(len(Dtest)):
                     
@@ -201,31 +201,31 @@ class Spectra:
                 
                 shift = _de_chirp(self, D)
                 
-                spectralPower[i,:] = numpy.sum(shift,1)**4
+                spectralPower[i, :] = numpy.sum(shift, 1) ** 4
                 
-            spectralPower = numpy.sum(spectralPower,axis=1)
+            spectralPower = numpy.sum(spectralPower, axis=1)
             dispersion = Dtest[spectralPower == numpy.max(spectralPower)]
                 
             return dispersion[0]
          
-        ## Calculate the amount to shift the dispersion plotting window based on the dispersion amount
+        # # Calculate the amount to shift the dispersion plotting window based on the dispersion amount
         def _chirp_offset(self, D):
         
             fShift = 1. / numpy.sqrt(5000)
-            fSamp = 1./(self.timebase[1] - self.timebase[0])
+            fSamp = 1. / (self.timebase[1] - self.timebase[0])
             fShift = fSamp * fShift
             
             offset = -numpy.ceil(0.5 * D * fShift)
             
             return offset
                           
-        ## Coarse dispersion calculation
-        Dtest = numpy.linspace(50,800,21)
+        # # Coarse dispersion calculation
+        Dtest = numpy.linspace(50, 800, 21)
         dispersion = _find_d(self, Dtest);
                 
-        ## Fine dispersion calculation
+        # # Fine dispersion calculation
         dStep = Dtest[1] - Dtest[0];
-        Dtest = numpy.linspace(dispersion-dStep,dispersion+dStep,31)
+        Dtest = numpy.linspace(dispersion - dStep, dispersion + dStep, 31)
         dispersion = _find_d(self, Dtest);
             
         self.dispersion = dispersion;
@@ -238,36 +238,36 @@ class Spectra:
     def whistlerPlot(self):
         
         # Initialize figure
-        fig = plt.figure(figsize=(self.formatimage.width,self.formatimage.height));
+        fig = plt.figure(figsize=(self.formatimage.width, self.formatimage.height));
                 
         # Create spectrogram plot
         # Axis are added [left, bottom, width, height] with 0-1 relative to figure coordinates
-        fig.add_axes([.125,.5,.8,.55])
+        fig.add_axes([.125, .5, .8, .55])
         self.insertSpectrogram()
         
         # Set title to give filename and sampling frequency
         plt.title(self.formatimage.name)
         
         # Add second plot
-        fig.add_axes([.125,.1,.8,.5])
-        self.insertSpectrogram(first = False)
+        fig.add_axes([.125, .1, .8, .5])
+        self.insertSpectrogram(first=False)
 
         # Set title to dispersion value
         plt.title("Dechirped Spectra, D = " + str(self.dispersion))
 
         # Save figure
-        plt.savefig(self.formatimage.savename,dpi = self.formatimage.dpi)
+        plt.savefig(self.formatimage.savename, dpi=self.formatimage.dpi)
         
         # Close the plot
         plt.close(fig)
         
-    def insertSpectrogram(self, first = True):
+    def insertSpectrogram(self, first=True):
         
         # Plot the spectrogram and set colorbar limits
         if (first):
-            plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
+            plt.imshow(self.power, origin='lower', vmin=-40, vmax=-15)
         else:
-            plt.imshow(self.dechirped, origin='lower',vmin = -40, vmax = -15)
+            plt.imshow(self.dechirped, origin='lower', vmin=-40, vmax=-15)
             
         # Set scale to be a float
         scale = 10.0;
@@ -281,16 +281,16 @@ class Spectra:
         xStep = 2;
         
         # Setup X tick marks and labels      
-        tStart = numpy.ceil( self.timebase[0] * scale) / scale;
-        tEnd = numpy.ceil( self.timebase[-1] * scale) / scale;
+        tStart = numpy.ceil(self.timebase[0] * scale) / scale;
+        tEnd = numpy.ceil(self.timebase[-1] * scale) / scale;
         
         tSteps = numpy.floor((1 / scale) / (self.timebase[1] - self.timebase[0]));
         
-        tickXloc = numpy.arange(0,len(self.timebase),step = tSteps)
-        tickXlabel = numpy.arange(tStart,tEnd,step = (1 / scale));
+        tickXloc = numpy.arange(0, len(self.timebase), step=tSteps)
+        tickXlabel = numpy.arange(tStart, tEnd, step=(1 / scale));
 
         # Setup Y Tick marks and labels
-        tickYloc = numpy.arange(0,len(self.freqbase))
+        tickYloc = numpy.arange(0, len(self.freqbase))
         tickYlabel = numpy.round(self.freqbase)
 
         # Skip designated amounts and round to nearest 0.1 kHz and 0.1 s
@@ -303,12 +303,12 @@ class Spectra:
         tickYlabel = numpy.round(tickYlabel / 100.0) / 10.0;
         
         # Update tickmarks
-        plt.xticks(tickXloc,tickXlabel)
-        plt.yticks(tickYloc,tickYlabel)
+        plt.xticks(tickXloc, tickXlabel)
+        plt.yticks(tickYloc, tickYlabel)
 
         # Generate and label colorbar
         if (not first):
-            cbar = plt.colorbar(orientation = 'horizontal')
+            cbar = plt.colorbar(orientation='horizontal')
             cbar.set_label('Spectral Power (dB)')
     
 class NeuralNetwork:
@@ -328,23 +328,23 @@ class NeuralNetwork:
             m = int(thetaShape.pop(0))
             n = int(thetaShape.pop(0))
 
-            theta = numpy.zeros((m,n));
+            theta = numpy.zeros((m, n));
             
             for i in range(m):
                 newLine = f.readline().split();
 
                 for j in range(n):
-                    theta[i,j] = newLine[j];
+                    theta[i, j] = newLine[j];
             
             self.Theta.append(theta);
-            f.readline(); # Skip empty line between theta parameters
+            f.readline();  # Skip empty line between theta parameters
 
     def predict(self, spectra):
         theta = self.Theta;
 
         image = spectra.image;
-        image = numpy.ravel(image,1);
-        image = numpy.reshape(image,(1,len(image)));
+        image = numpy.ravel(image, 1);
+        image = numpy.reshape(image, (1, len(image)));
 
         nLayers = len(theta);
         m = image.shape[0];
@@ -366,27 +366,27 @@ class NeuralNetwork:
                 z[i] = self.sigmoid(zPrime);
                 
                
-            biasTerm = numpy.zeros((m,1));
+            biasTerm = numpy.zeros((m, 1));
             a[i] = numpy.concatenate((biasTerm, z[i]), 1);
         
-        a[-1] = a[-1][:,0:-1];
+        a[-1] = a[-1][:, 0:-1];
         
         h = a[-1];
         
-        p = numpy.argmax(h, axis = 1);
+        p = numpy.argmax(h, axis=1);
         
         return p - 1.0
     
     def sigmoid(self, z):
         return 1.0 / (1.0 + numpy.exp(-z));
         
-    def sigmoidGradient(self,z):
+    def sigmoidGradient(self, z):
         return self.sigmoid(z) * (1 - self.sigmoid(z));
         
     def search(self, wideband):
         
-        stepSize = 0.2 # seconds
-        windows = numpy.linspace(stepSize, 60.0, 60.0/stepSize);
+        stepSize = 0.2  # seconds
+        windows = numpy.linspace(stepSize, 60.0, 60.0 / stepSize);
         
         whistlers = []
         
@@ -413,7 +413,7 @@ class imageFormat:
         self.name = 'whistler';
         self.imagedir = '';
 
-    def makename(self,filename, append):
+    def makename(self, filename, append):
         name = filename.split("/");
         name = name[-1];
         self.name = name;
@@ -427,12 +427,12 @@ class imageFormat:
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='Searches for whistlers in wideband WB.dat files')
-    parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help = 'Name (list) of wideband file(s)')
+    parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help='Name (list) of wideband file(s)')
 
-    ## TODO: add more input arguments such as no plotting or no dispersion
-    ## TODO: Designate input WB directory, designate output for results and figures
-    ## TODO:  Designate nnParams file
-    ## TODO:   Any sort of file appending
+    # # TODO: add more input arguments such as no plotting or no dispersion
+    # # TODO: Designate input WB directory, designate output for results and figures
+    # # TODO:  Designate nnParams file
+    # # TODO:   Any sort of file appending
     
     args = parser.parse_args()
     filenames = args.fileName
@@ -466,7 +466,7 @@ if __name__ == '__main__':
 
             date = whistler.date;
             
-            printLine = '%04g/%02g/%02g, %02g:%02g:%02g, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],whistler.time, whistler.dispersion)  
+            printLine = '%04g/%02g/%02g, %02g:%02g:%02g, D = %.2f' % (date[0], date[1], date[2], date[3], date[4], whistler.time, whistler.dispersion)  
             print printLine    
             fid.write(printLine + '\n')
             
