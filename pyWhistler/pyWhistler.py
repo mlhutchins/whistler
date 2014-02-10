@@ -203,11 +203,8 @@ class Spectra:
                 
             spectralPower = numpy.sum(spectralPower,axis=1)
             dispersion = Dtest[spectralPower == numpy.max(spectralPower)]
-            
-            if len(dispersion) > 1:
-                dispersion = dispersion[0]
                 
-            return dispersion
+            return dispersion[0]
          
         ## Calculate the amount to shift the dispersion plotting window based on the dispersion amount
         def _chirp_offset(self, D):
