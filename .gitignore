@@ -1,4 +1,8 @@
 *log
+*txt
+*swp
+*.project
+*.pydevproject
 *png
 whistlers.txt
 download.sh
