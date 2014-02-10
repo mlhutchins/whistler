@@ -5,9 +5,13 @@ import numpy
 import copy
 
 ## TODO: add case for systems without matplotlib
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    matplotLoaded = True;
+except:
+    matplotLoaded = False;
         
 class WidebandVLF:
     
@@ -408,14 +412,11 @@ class imageFormat:
         self.savename = name;
         
         
-    
-    
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='Searches for whistlers in wideband WB.dat files')
     parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help = 'Name (list) of wideband file(s)')
 
-    
     args = parser.parse_args()
     filenames = args.fileName
     
@@ -444,24 +445,26 @@ if __name__ == '__main__':
         
         for whistler in whistlers:
             
-    
-            whistler.formatimage = spectrogramFormat;
-            
-            # Append time of whistler to the filename
-            appendText = '_' + str(int(whistler.time));
-            whistler.formatimage.makename(fileName, appendText);
-            
-            whistler.whistlerPlot()
-            
             dechirp = whistler.deChirp()
-        
-            appendText = appendText + '_dechirped';
-            dechirp.formatimage.makename(fileName, appendText);
 
-            dechirp.whistlerPlot()
-            
             date = whistler.date;
             
             printLine = '%04g/%02g/%02g, %02g:%02g:%.2f, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],date[5], dechirp.dispersion)      
             fid.write(printLine)
+            if matplotLoaded:
+            
+                whistler.formatimage = spectrogramFormat;
+            
+                # Append time of whistler to the filename
+                whistlerAppend = '_' + str(int(whistler.time));
+                whistler.formatimage.makename(fileName, whistlerAppend);
+                    
+                dechirpAppend = whistlerAppend + '_dechirped';
+                dechirp.formatimage.makename(fileName, dechirpAppend);
+        
+                ## TODO: Combine figures into one
+        
+                whistler.whistlerPlot()
+    
+                dechirp.whistlerPlot()
             
