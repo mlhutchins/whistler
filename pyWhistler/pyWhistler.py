@@ -427,6 +427,8 @@ if __name__ == '__main__':
     
     outputFile = 'search.txt';
     
+    fid = open(outputFile, 'a')
+    
     spectrogramFormat = imageFormat();
     spectrogramFormat.imagedir = '';
     
@@ -458,6 +460,8 @@ if __name__ == '__main__':
 
             dechirp.whistlerPlot()
             
-        
-    
-    
+            date = whistler.date;
+            
+            printLine = '%04g/%02g/%02g, %02g:%02g:%.2f, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],date[5], dechirp.dispersion)      
+            fid.write(printLine)
+            
