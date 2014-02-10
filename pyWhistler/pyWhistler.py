@@ -244,6 +244,11 @@ class Spectra:
         # Set title to give filename and sampling frequency
         plt.title(self.formatimage.name)
         
+        self.insertSpectrogram(first = False)
+
+        # Set title to dispersion value
+        plt.title("Dechirped Spectra, D = " + str(self.dispersion))
+
         # Save figure
         plt.savefig(self.formatimage.savename,dpi = self.formatimage.dpi)
         
