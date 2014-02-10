@@ -4,7 +4,6 @@ import argparse
 import numpy  
 import copy
 
-## TODO: add case for systems without matplotlib
 try:
     import matplotlib
     matplotlib.use('Agg')
@@ -19,12 +18,21 @@ class WidebandVLF:
         
         self.time = self.eField = self.power = self.Fs = self.freqBase = self.timeBase = self.fileStart = [];
         self.date = [1999,01,01,00,00,00];
-        
-        ## TODO: Set date from filename
-        
+                
     def importFile(self, fileName):
         ## Read in Wideband VLF Data
         self.file = fileName;
+
+        fileDate = fileName.split('/')
+        fileDate = fileDate[-1]
+
+        year = int(fileDate[2:6])
+        month = int(fileDate[6:8])
+        day = int(fileDate[8:10])
+        hour = int(fileDate[10:12])
+        minute = int(fileDate[12:14])
+
+        self.date = [year, month, day, hour, minute, -1.0];
 
         fid = open(self.file, 'rb')
     
@@ -106,7 +114,7 @@ class Spectra:
     def format(self, wideband, time):
         self.time = time;
         self.date = wideband.date;
-        
+        self.date[5] = time;
 
         timeBase = wideband.timeBase;
         freqBase = wideband.freqBase;
@@ -449,7 +457,7 @@ if __name__ == '__main__':
 
             date = whistler.date;
             
-            printLine = '%04g/%02g/%02g, %02g:%02g:%.2f, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],date[5], dechirp.dispersion)  
+            printLine = '%04g/%02g/%02g, %02g:%02g:%02g, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],whistler.time, dechirp.dispersion)  
             print printLine    
             fid.write(printLine + '\n')
             
