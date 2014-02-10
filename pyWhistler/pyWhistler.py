@@ -449,8 +449,10 @@ if __name__ == '__main__':
 
             date = whistler.date;
             
-            printLine = '%04g/%02g/%02g, %02g:%02g:%.2f, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],date[5], dechirp.dispersion)      
-            fid.write(printLine)
+            printLine = '%04g/%02g/%02g, %02g:%02g:%.2f, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],date[5], dechirp.dispersion)  
+            print printLine    
+            fid.write(printLine + '\n')
+            
             if matplotLoaded:
             
                 whistler.formatimage = spectrogramFormat;
