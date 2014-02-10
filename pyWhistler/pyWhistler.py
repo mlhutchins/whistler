@@ -2,7 +2,7 @@
 
 import argparse
 import numpy  
-import copy
+
 
 try:
     import matplotlib
