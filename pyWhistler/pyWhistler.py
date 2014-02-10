@@ -239,11 +239,15 @@ class Spectra:
         fig = plt.figure(figsize=(self.formatimage.width,self.formatimage.height));
                 
         # Create spectrogram plot
+        # Axis are added [left, bottom, width, height] with 0-1 relative to figure coordinates
+        fig.add_axes([.125,.5,.8,.55])
         self.insertSpectrogram()
         
         # Set title to give filename and sampling frequency
         plt.title(self.formatimage.name)
         
+        # Add second plot
+        fig.add_axes([.125,.1,.8,.5])
         self.insertSpectrogram(first = False)
 
         # Set title to dispersion value
@@ -423,6 +427,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Searches for whistlers in wideband WB.dat files')
     parser.add_argument('fileName', metavar='filename', type=str, nargs='+', help = 'Name (list) of wideband file(s)')
 
+    ## TODO: add more input arguments such as no plotting or no dispersion
+
     args = parser.parse_args()
     filenames = args.fileName
     
@@ -466,9 +472,7 @@ if __name__ == '__main__':
                 # Append time of whistler to the filename
                 whistlerAppend = '_' + str(int(whistler.time));
                 whistler.formatimage.makename(fileName, whistlerAppend);
-        
-                ## TODO: Combine figures into one
-        
+                
                 whistler.whistlerPlot();
     
             
