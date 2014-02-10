@@ -163,6 +163,8 @@ class Spectra:
                 
     def deChirp(self):
 
+        ## TODO: better de-chirping
+
         def _de_chirp(self, D):
  
             # Get the left shift-vector in seconds for a D = 1 constant
