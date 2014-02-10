@@ -250,11 +250,14 @@ class Spectra:
         # Close the plot
         plt.close(fig)
         
-    def insertSpectrogram(self):
+    def insertSpectrogram(self, first = True):
         
         # Plot the spectrogram and set colorbar limits
-        plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
-        
+        if (first):
+            plt.imshow(self.power, origin='lower',vmin = -40, vmax = -15)
+        else:
+            plt.imshow(self.dechirped, origin='lower',vmin = -40, vmax = -15)
+            
         # Set scale to be a float
         scale = 10.0;
         
@@ -293,9 +296,9 @@ class Spectra:
         plt.yticks(tickYloc,tickYlabel)
 
         # Generate and label colorbar
-        cbar = plt.colorbar(orientation = 'horizontal')
-        cbar.set_label('Spectral Power (dB)')
-        
+        if (not first):
+            cbar = plt.colorbar(orientation = 'horizontal')
+            cbar.set_label('Spectral Power (dB)')
     
 class NeuralNetwork:
     
