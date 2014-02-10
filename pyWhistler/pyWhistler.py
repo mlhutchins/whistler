@@ -107,7 +107,7 @@ class Spectra:
         self.startBuffer = 0.5; #seconds
         self.endBuffer = 0.75; #second
         self.formatimage = imageFormat();
-        self.power = self.image = [];
+        self.power = self.image = self.dechirped = [];
         self.dechirpedOffset = 0.0;
         self.dispersion = 0.0;
                 
@@ -219,10 +219,6 @@ class Spectra:
             offset = -numpy.ceil(0.5 * D * fShift)
             
             return offset
-             
-        ## Create dechirped whistler spectra
-        
-        dechirped = copy.copy(self);
                           
         ## Coarse dispersion calculation
         Dtest = numpy.linspace(50,800,21)
@@ -233,15 +229,12 @@ class Spectra:
         Dtest = numpy.linspace(dispersion-dStep,dispersion+dStep,31)
         dispersion = _find_d(self, Dtest);
             
-        dechirped.dispersion = dispersion;
+        self.dispersion = dispersion;
             
         # De-chirp spectra
             
-        dechirped.power = _de_chirp(self, dispersion)
-        dechirped.dechirpedOffset = _chirp_offset(self, dispersion)          
-
-        return dechirped
-
+        self.dechirped = _de_chirp(self, dispersion)
+        self.dechirpedOffset = _chirp_offset(self, dispersion)          
                     
     def whistlerPlot(self):
         
@@ -453,11 +446,11 @@ if __name__ == '__main__':
         
         for whistler in whistlers:
             
-            dechirp = whistler.deChirp()
+            whistler.deChirp()
 
             date = whistler.date;
             
-            printLine = '%04g/%02g/%02g, %02g:%02g:%02g, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],whistler.time, dechirp.dispersion)  
+            printLine = '%04g/%02g/%02g, %02g:%02g:%02g, D = %.2f' % (date[0],date[1],date[2],date[3],date[4],whistler.time, whistler.dispersion)  
             print printLine    
             fid.write(printLine + '\n')
             
@@ -468,13 +461,9 @@ if __name__ == '__main__':
                 # Append time of whistler to the filename
                 whistlerAppend = '_' + str(int(whistler.time));
                 whistler.formatimage.makename(fileName, whistlerAppend);
-                    
-                dechirpAppend = whistlerAppend + '_dechirped';
-                dechirp.formatimage.makename(fileName, dechirpAppend);
         
                 ## TODO: Combine figures into one
         
-                whistler.whistlerPlot()
+                whistler.whistlerPlot();
     
-                dechirp.whistlerPlot()
             
