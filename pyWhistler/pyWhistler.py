@@ -2,6 +2,7 @@
 
 import argparse
 import numpy  
+import copy
 
 ## TODO: add case for systems without matplotlib
 import matplotlib
@@ -94,7 +95,7 @@ class Spectra:
         self.startBuffer = 0.5; #seconds
         self.endBuffer = 0.75; #second
         self.formatimage = imageFormat();
-        self.power = self.image = self.dechirped = [];
+        self.power = self.image = [];
         self.dechirpedOffset = 0.0;
         self.dispersion = 0.0;
                 
@@ -200,7 +201,7 @@ class Spectra:
         def _chirp_offset(self, D):
         
             fShift = 1. / numpy.sqrt(5000)
-            fSamp = 1./(self.timebase[1] - self.timebas[0])
+            fSamp = 1./(self.timebase[1] - self.timebase[0])
             fShift = fSamp * fShift
             
             offset = -numpy.ceil(0.5 * D * fShift)
@@ -224,7 +225,7 @@ class Spectra:
             
         # De-chirp spectra
             
-        dechirped.dechirped = _de_chirp(self, dispersion)
+        dechirped.power = _de_chirp(self, dispersion)
         dechirped.dechirpedOffset = _chirp_offset(self, dispersion)          
 
         return dechirped
@@ -450,7 +451,7 @@ if __name__ == '__main__':
             
             whistler.whistlerPlot()
             
-            dechirp = whistlers.deChirp()
+            dechirp = whistler.deChirp()
         
             appendText = appendText + '_dechirped';
             dechirp.formatimage.makename(fileName, appendText);
