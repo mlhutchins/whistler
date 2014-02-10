@@ -94,7 +94,9 @@ class Spectra:
         self.startBuffer = 0.5; #seconds
         self.endBuffer = 0.75; #second
         self.formatimage = imageFormat();
-        self.power = self.image = [];
+        self.power = self.image = self.dechirped = [];
+        self.dechirpedOffset = 0.0;
+        self.dispersion = 0.0;
                 
     def format(self, wideband, time):
         self.time = time;
@@ -147,8 +149,86 @@ class Spectra:
         self.width = image.shape[0];
                 
     def deChirp(self):
-        ## TODO: deChirp code
-        pass;
+
+        def _de_chirp(self, D):
+ 
+            # Get the left shift-vector in seconds for a D = 1 constant
+            
+            fRange = self.freqbase.copy();
+            
+            fRange[0] = fRange[1]
+            fShift = 1./numpy.sqrt(fRange)
+            
+            # Convert to seconds in units of time step
+            fSamp = 1./(self.timebase[1]-self.timebase[0])
+            fShift = fSamp * fShift
+            
+            intShift = numpy.ceil(0.5 * D * fShift);
+        
+            shift = 0. * self.power.copy()
+        
+            # Shift each row of power spectra
+            for j in range(len(fRange)):
+                
+                shiftLevel = -intShift[j]
+                shift[j,:] = numpy.roll(self.power[j,:],int(shiftLevel));    
+                
+            return shift
+        
+        def _find_d(self, Dtest):
+            
+            # Initialize output array
+            spectralPower = numpy.zeros((len(Dtest),self.power.shape[0]))
+        
+            for i in range(len(Dtest)):
+                    
+                D = Dtest[i]
+                
+                shift = _de_chirp(self, D)
+                
+                spectralPower[i,:] = numpy.sum(shift,1)**4
+                
+            spectralPower = numpy.sum(spectralPower,axis=1)
+            dispersion = Dtest[spectralPower == numpy.max(spectralPower)]
+            
+            if len(dispersion) > 1:
+                dispersion = dispersion[0]
+                
+            return dispersion
+         
+        ## Calculate the amount to shift the dispersion plotting window based on the dispersion amount
+        def _chirp_offset(self, D):
+        
+            fShift = 1. / numpy.sqrt(5000)
+            fSamp = 1./(self.timebase[1] - self.timebas[0])
+            fShift = fSamp * fShift
+            
+            offset = -numpy.ceil(0.5 * D * fShift)
+            
+            return offset
+             
+        ## Create dechirped whistler spectra
+        
+        dechirped = copy.copy(self);
+                          
+        ## Coarse dispersion calculation
+        Dtest = numpy.linspace(50,800,21)
+        dispersion = _find_d(self, Dtest);
+                
+        ## Fine dispersion calculation
+        dStep = Dtest[1] - Dtest[0];
+        Dtest = numpy.linspace(dispersion-dStep,dispersion+dStep,31)
+        dispersion = _find_d(self, Dtest);
+            
+        dechirped.dispersion = dispersion;
+            
+        # De-chirp spectra
+            
+        dechirped.dechirped = _de_chirp(self, dispersion)
+        dechirped.dechirpedOffset = _chirp_offset(self, dispersion)          
+
+        return dechirped
+
                     
     def whistlerPlot(self):
         
@@ -360,8 +440,6 @@ if __name__ == '__main__':
         whistlers = neuralNet.search(wideband);
         
         for whistler in whistlers:
-        
-            # TODO: Iterate over list of whistlers to deChirp and then plot
             
     
             whistler.formatimage = spectrogramFormat;
@@ -372,9 +450,12 @@ if __name__ == '__main__':
             
             whistler.whistlerPlot()
             
-            #dechirp = whistlers.deChirp()
+            dechirp = whistlers.deChirp()
         
-          #  dechirp.whistlerPlot()
+            appendText = appendText + '_dechirped';
+            dechirp.formatimage.makename(fileName, appendText);
+
+            dechirp.whistlerPlot()
             
         
     
