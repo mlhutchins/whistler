@@ -48,22 +48,27 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	% Lamdba (regularization values)
 	
-	lambda = {1, 10, 50, 100, 200};
+	lambda = {5, 10, 25};
 	
-	networkShape = {[300],...
-					[500],...
-					[700],...
+	networkShape = {[750],...
 					[800],...
-					[900]};
+					[850]};
 				
-	threshold = {35, 45, 55, 66};
+	threshold = {40, 45, 50};
 	
-	frequency = {[1 6.5],...
-				 [2 6.5],...
-				 [3 6.5],...
-				 [1 7.5],...
-				 [2 7.5],...
-				 [3 7.5]};
+	freqLower = [1.5 : 0.5 : 4];
+	freqUpper = [4.5 : 1 : 9.5];
+	
+	frequency = cell(length(freqUpper) * length(freqLower), 1);
+	
+	index = 1;
+	for i = 1 : length(freqLower)
+		for j = 1 : length(freqUpper)
+			frequency(index) = {[freqLower(i) freqUpper(j)]};
+			index = index + 1;
+		end
+	end
+			
 	
 	% Permute into parameter cell array
 	cvParameters = cell(length(lambda) * length(networkShape) *...
