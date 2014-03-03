@@ -48,16 +48,14 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	% Lamdba (regularization values)
 	
-	lambda = {5, 10, 25};
+	lambda = {5};
 	
-	networkShape = {[750],...
-					[800],...
-					[850]};
+	networkShape = {[850]};
 				
-	threshold = {40, 45, 50};
+	threshold = {45};
 	
-	freqLower = [1.5 : 0.5 : 4];
-	freqUpper = [4.5 : 1 : 9.5];
+	freqLower = [1.5];
+	freqUpper = [6.5];
 	
 	frequency = cell(length(freqUpper) * length(freqLower), 1);
 	
@@ -112,7 +110,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 		%% Adjust and Initialize Neural Network
 
-		neuralNetwork = neural_network_init(networkShape,lambda, 200);
+		neuralNetwork = neural_network_init(networkShape,lambda, 1000);
 		% hiddenLayerSize, lambda, maxIter
 
 		%% Train Initial Neural Network
