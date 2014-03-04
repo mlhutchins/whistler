@@ -34,7 +34,7 @@ function [ location, spectra, spectraBase] = sliding_window( time, frequency, po
 
 		%% Find local probability maxima above threshold
 
-		[ sample, ~ ] = format_data( windowSpectra, 85, [3 4.5] );
+		[ sample, ~ ] = format_data( windowSpectra );
 		
 		found(i) = predict(Theta, sample) - 1;
 
