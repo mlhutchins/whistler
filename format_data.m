@@ -9,7 +9,7 @@ function [ samples, nWidth ] = format_data( images, threshold, freqThreshold )
 	switch nargin
 		case 1
 			threshold = 45;
-			freqThreshold = [1, 6.5]; %kHz
+			freqThreshold = [1.5, 6.5]; %kHz
 	end
 	
 	if length(size(images)) == 2
