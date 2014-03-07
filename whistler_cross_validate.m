@@ -120,7 +120,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 		%% Train Initial Neural Network
 
-		[Theta, ~, ~] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
+		[Theta, dummy1, dummy2] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
 
 		%% Get cross validation statistics
 
@@ -159,7 +159,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	remove = sum(isnan(statistics),2) > 0;
 
 
-	[~, best] = max(statistics(:,3));
+	[dummy, best] = max(statistics(:,3));
 	secondBest = find(statistics(:,3) > prctile(statistics(~remove,3),95));
 
 	fprintf('\n')
