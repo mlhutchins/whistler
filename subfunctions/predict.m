@@ -43,6 +43,6 @@ function p = predict(Theta, X)
 	
 	h = a{end};
 
-	[~, p] = max(h, [], 2);
+	[dummy, p] = max(h, [], 2);
 	
 end
