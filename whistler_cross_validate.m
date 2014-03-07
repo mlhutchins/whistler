@@ -110,12 +110,12 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 
 		%% Adjust and Initialize Neural Network
 
-		neuralNetwork = neural_network_init(networkShape,lambda, 1000);
+		neuralNetwork = neural_network_init(networkShape,lambda, 200);
 		% hiddenLayerSize, lambda, maxIter
 
 		%% Train Initial Neural Network
 
-		[Theta, ~, ~] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
+		[Theta, testStats, ~] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
 
 		%% Get cross validation statistics
 
@@ -133,6 +133,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		frequencyString = sprintf('[%g %g]',frequency(1), frequency(2));
 		fprintf('\t L: %g, NN: [%s] T: %g, F: %s |',lambda, shapeString, threshold, frequencyString);
 		fprintf('\t A: %.2f%%, P: %.2f%%, S: %.2f%%, Sp: %.2f%% \n',100*accuracy, 100*precision, 100*sensitivity, 100*specificity);
+		fprintf('\t\t\t\t\t\tTest Stats: A: %.2f%%, P: %.2f%%, S: %.2f%%, Sp: %.2f%% \n',100*testStats{1}, 100*testStats{2}, 100*testStats{3}, 100*testStats{4});
 
 	end
 
