@@ -24,7 +24,12 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	fprintf('Setting Random Seed\n');
 
-	rng(3);
+	try
+		rng(3);
+	catch
+		randomStream = RandStream('mt19937ar','Seed',3);
+		RandStream.setDefaultStream(randomStream);
+	end
 
 %% Split into training / CV / test
 	
@@ -114,8 +119,8 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 		% hiddenLayerSize, lambda, maxIter
 
 		%% Train Initial Neural Network
-
-		[Theta, testStats, ~] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
+		
+		[Theta, testStats, dummy] = neural_network_training(samples(train,:),labels(train,:),neuralNetwork);
 
 		%% Get cross validation statistics
 
@@ -155,7 +160,7 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	remove = sum(isnan(statistics),2) > 0;
 
 
-	[~, best] = max(statistics(:,3));
+	[dummy, best] = max(statistics(:,3));
 	secondBest = find(statistics(:,3) > prctile(statistics(~remove,3),95));
 
 	fprintf('\n')
