@@ -68,7 +68,7 @@ function [ images, labels ] = load_data
 	fprintf(fid,'DIR=''/wd1/forks/wideband''\n');
 	fprintf(fid,'scp ');
 	
-	[~, uniqueWB] = unique(files);
+	[dummy, uniqueWB] = unique(files);
 
 	for i = 1 : length(uniqueWB)
 		
@@ -84,7 +84,7 @@ function [ images, labels ] = load_data
 
 %% Import spectra
 
-	fprintf('Importing %s data from %s and \n',trainingFile, falseFile, widebandDir);
+	fprintf('Importing %s data from %s and %s\n',trainingFile, falseFile, widebandDir);
 
 	% Import the first to get file sizes
 
@@ -119,7 +119,7 @@ end
 
 function [spectra] = get_spectra(fileName, trigger)
 
-	[~, eField, Fs] = wideband_import(fileName);
+	[dummy, eField, Fs] = wideband_import(fileName);
 	
 	[timeBase,freqBase,power] = wideband_fft(eField,Fs);
 	
