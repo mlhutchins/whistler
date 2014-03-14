@@ -53,11 +53,11 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	
 	% Lamdba (regularization values)
 	
-	lambda = {5,100,300};
+	lambda = {50,100,300,500};
 	
-	networkShape = {[400],[400,100],[800],[800,100]};
+	networkShape = {[600],[800],[800,100],[1000]};
 				
-	threshold = {45,60,75};
+	threshold = {15,45,60,75,95};
 	
 	freqLower = [1.5,3];
 	freqUpper = [4.5,6.5];
