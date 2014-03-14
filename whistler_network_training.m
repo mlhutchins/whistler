@@ -25,8 +25,8 @@ function [Theta] = whistler_network_training
 	images = [];
 	labels = [];
 	
-	loadHash = '';	
-	
+	loadHash = '39780c8';	
+
 	dataFile = sprintf('data/trainingData_%s.mat',loadHash);
 
 	if file_check(dataFile)
