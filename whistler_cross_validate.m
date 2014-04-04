@@ -25,9 +25,9 @@ function [ Theta, statistics, cost, cvStatistics ] = whistler_cross_validate( im
 	fprintf('Setting Random Seed\n');
 
 	try
-		rng(3);
+		rng(4);
 	catch
-		randomStream = RandStream('mt19937ar','Seed',3);
+		randomStream = RandStream('mt19937ar','Seed',4);
 		RandStream.setDefaultStream(randomStream);
 	end
 
